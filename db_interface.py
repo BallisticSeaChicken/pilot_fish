@@ -14,6 +14,7 @@ class Person(Base):
 	LastName = Column(String(50))
 	Password = Column(String(20))
 	Department = Column(String(20))
+	PhoneNumber = Column(String(20))
 	Email = Column(String(50))
 	
 	Campaigns = relationship("Campaign", backref="person")
@@ -36,7 +37,7 @@ def all_campaigns():
 	
 def get_campaign_by_title(name):
 	session = Session()
-	result = session.query(Campaign).filter(campaign.CampaignTitle==name).first()
+	result = session.query(Campaign).options(joinedload(Campaign.person)).filter(Campaign.CampaignTitle==name).first()
 	session.close()
 	
 	return result
