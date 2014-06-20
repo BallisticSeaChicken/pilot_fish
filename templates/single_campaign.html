@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>{{campaign.CampaignTitle}}</h2>
+	<div>
+		<h3>Created on:</h3> {{campaign.DatePosted}}<br>
+		<h3>By:</h3> {{campaign.Creator}}<br>
+		<h3>Backed by:</h3> {{campaign.Backers}}<br>
+		<h3>Created on:</h3> {{campaign.DatePosted}}<br>
+		<h3>Description:</h3> {{campaign.ShortDesc}}<br>
+	</div>
+	
+{% endblock %}
