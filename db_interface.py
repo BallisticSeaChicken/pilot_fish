@@ -17,27 +17,54 @@ class Person(Base):
 	PhoneNumber = Column(String(20))
 	Email = Column(String(50))
 	
-	Campaigns = relationship("Campaign", backref="person")
+	Campaigns = relationship("Campaign", primaryjoin= "Campaign.Creator == Person.PersonID",  backref="Person")
+	
+	ContributedTo = relationship("Contribution", primaryjoin= "Contribution.ContributorID == Person.PersonID", backref="Contributor")
 
 class Campaign(Base):
-    __tablename__ = 'Campaigns'
-    CampaignTitle = Column(String(50), primary_key = True)
-    ShortDesc = Column(String(300))
-    DatePosted = Column(Date)
-    Contributions = Column(Integer)
-    Backers = Column(Integer)
-    Creator = Column(String(50), ForeignKey('Persons.PersonID'))
+	__tablename__ = 'Campaigns'
+	CampaignTitle = Column(String(50), primary_key = True)
+	ShortDesc = Column(String(300))
+	DatePosted = Column(Date)
+	Contributions = Column(Integer)
+	Backers = Column(Integer)
+	Creator = Column(Integer, ForeignKey('Persons.PersonID'))
+	IndividualContributions = relationship("Contribution", primaryjoin= "Contribution.CampaignTitle == Campaign.CampaignTitle", backref="ContributionTarget")
+	
+class Contribution(Base):
+	__tablename__ = 'Contributions'
+	ContributionID = Column(Integer, primary_key = True)
+	ContributorID = Column(Integer, ForeignKey('Persons.PersonID'))
+	CampaignTitle = Column(String, ForeignKey('Campaigns.CampaignTitle'))
+	Contribution = Column(Integer)
+	
+def get_contribution(id = None, cid = None, campaign = None):
+	session = Session()
+	contributions = session.query(Contribution).options(joinedload(Contribution.Contributor), joinedload(Contribution.ContributionTarget))
+	
+	if(id):
+		contributions.filter(Contribution.ContributionID == id)
+	if(cid):
+		contributions.filter(Contribution.ContributorID == cid)
+	if(campaign):
+		contributions.filter(Contribution.CampaignTitle == campaign)
+		
+	contributions = contributions.all()
+	
+	session.close()
+	
+	return contributions
 
 def all_campaigns():
 	session = Session()
-	campaigns = session.query(Campaign).options(joinedload(Campaign.person)).all()
+	campaigns = session.query(Campaign).options(joinedload(Campaign.Person)).all()
 	session.close()
 	
 	return campaigns
 	
 def get_campaign_by_title(name):
 	session = Session()
-	result = session.query(Campaign).options(joinedload(Campaign.person)).filter(Campaign.CampaignTitle==name).first()
+	result = session.query(Campaign).options(joinedload(Campaign.Person)).filter(Campaign.CampaignTitle==name).first()
 	session.close()
 	
 	return result

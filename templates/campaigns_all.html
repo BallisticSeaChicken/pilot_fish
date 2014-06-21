@@ -20,7 +20,7 @@
 			<td>{{instance.DatePosted}}</td>
 			<td>{{instance.Contributions}}</td>
 			<td>{{instance.Backers}}</td>
-			<td><a href="/persons/{{instance.person.PersonID|urlencode()}}">{{instance.person.FirstName}} {{instance.person.LastName}}</d></td>
+			<td><a href="/persons/{{instance.Person.PersonID|urlencode()}}">{{instance.Person.FirstName}} {{instance.Person.LastName}}</d></td>
 		</tr>
 		{% endfor %}
 		</tbody>
