@@ -1,5 +1,5 @@
 from flask import Flask, url_for, render_template, redirect
-from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id
+from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution
 
 app = Flask(__name__)
 
@@ -29,8 +29,8 @@ def persons_list():
 @app.route("/persons/<int:id>")	
 def person_info(id):
 	person = get_person_by_id(id)
-	return render_template('single_person.html', person = person)
-	
+	contributed_to = get_contribution(contributor = id)
+	return render_template('single_person.html', person = person, contributed_to = contributed_to)
 
 if __name__ == "__main__":
     app.run(debug = True)

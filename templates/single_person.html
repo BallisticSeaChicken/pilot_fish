@@ -8,7 +8,7 @@
 		<h3>Email:</h3> {{person.Email}}<br>
 		<p>
 			<h3>Created Projects:</h3>
-			<table id="all_campaigns">
+			<table id="campaigns_made" class="campaign_info">
 				<thead>
 				<tr>
 					<th align="left">Title</th>
@@ -23,21 +23,51 @@
 				<tr>
 					<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignTitle}}</a></td>
 					<td>{{instance.DatePosted}}</td>
-					<td>{{instance.Contributions}}</td>
-					<td>{{instance.Backers}}</td>
+					<td>{{instance.getContributionSum()}}</td>
+					<td>{{instance.getNumBackers()}}</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			
+			<table id="contributed_to" class="campaign_info">
+				<thead>
+				<tr>
+					<th align="left">Title</th>
+					<th align="left">Date Contributed</th>
+					<th align="left">Contribution</th>
+				</tr>
+				</thead>
+				
+				<tbody>
+				{% for instance in contributed_to %}
+				<tr>
+					<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignName}}</a></td>
+					<td>{{instance.Date}}</td>
+					<td>{{instance.Contribution}}</td>
 				</tr>
 				{% endfor %}
 				</tbody>
 			</table>
 			<script type="text/javascript">
 			$(document).ready(function() {
-				$('#all_campaigns').dataTable({
+				$('#campaigns_made').dataTable({
 					"info": false,
 					"paging": false,
 					"aoColumns": [
 						null,
 						null,
 						{ "bSearchable": false },
+						{ "bSearchable": false }
+					]
+				});
+				
+				$('#contributed_to').dataTable({
+					"info": false,
+					"paging": false,
+					"aoColumns": [
+						null,
+						null,
 						{ "bSearchable": false }
 					]
 				});

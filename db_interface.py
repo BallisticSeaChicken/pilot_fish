@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, create_engine, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, create_engine, ForeignKey, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, backref, joinedload
 
@@ -26,28 +26,37 @@ class Campaign(Base):
 	CampaignTitle = Column(String(50), primary_key = True)
 	ShortDesc = Column(String(300))
 	DatePosted = Column(Date)
-	Contributions = Column(Integer)
-	Backers = Column(Integer)
 	Creator = Column(Integer, ForeignKey('Persons.PersonID'))
-	IndividualContributions = relationship("Contribution", primaryjoin= "Contribution.CampaignTitle == Campaign.CampaignTitle", backref="ContributionTarget")
+	
+	IndividualContributions = relationship("Contribution", primaryjoin= "Contribution.CampaignName == Campaign.CampaignTitle", backref="ContributionTarget")
+	
+	def getContributionSum(self):
+		sum = int()
+		for c in self.IndividualContributions:
+			sum += c.Contribution
+		return sum
+	
+	def getNumBackers(self):
+		return len(self.IndividualContributions)
 	
 class Contribution(Base):
 	__tablename__ = 'Contributions'
 	ContributionID = Column(Integer, primary_key = True)
 	ContributorID = Column(Integer, ForeignKey('Persons.PersonID'))
-	CampaignTitle = Column(String, ForeignKey('Campaigns.CampaignTitle'))
+	CampaignName = Column(String, ForeignKey('Campaigns.CampaignTitle'))
 	Contribution = Column(Integer)
 	
-def get_contribution(id = None, cid = None, campaign = None):
+	
+def get_contribution(id = None, contributor = None, campaign = None):
 	session = Session()
 	contributions = session.query(Contribution).options(joinedload(Contribution.Contributor), joinedload(Contribution.ContributionTarget))
 	
 	if(id):
-		contributions.filter(Contribution.ContributionID == id)
-	if(cid):
-		contributions.filter(Contribution.ContributorID == cid)
+		contributions = contributions.filter(Contribution.ContributionID == id)
+	if(contributor):
+		contributions = contributions.filter(Contribution.ContributorID == contributor)
 	if(campaign):
-		contributions.filter(Contribution.CampaignTitle == campaign)
+		contributions = contributions.filter(Contribution.CampaignName == campaign)
 		
 	contributions = contributions.all()
 	
@@ -57,7 +66,7 @@ def get_contribution(id = None, cid = None, campaign = None):
 
 def all_campaigns():
 	session = Session()
-	campaigns = session.query(Campaign).options(joinedload(Campaign.Person)).all()
+	campaigns = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions)).all()
 	session.close()
 	
 	return campaigns
@@ -78,7 +87,7 @@ def get_all_persons():
 	
 def get_person_by_id(id):
 	session = Session()
-	person = session.query(Person).options(joinedload(Person.Campaigns)).filter(Person.PersonID == id).first()
+	person = session.query(Person).options(joinedload(Person.Campaigns).joinedload(Campaign.IndividualContributions)).filter(Person.PersonID == id).first()
 	session.close()
 	
 	return person
