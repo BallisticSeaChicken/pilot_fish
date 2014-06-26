@@ -41,13 +41,15 @@ $(document).ready (function() {
 		autoOpen: false,
 		modal: true
     });
- 
+	
+	if ({{campaign.getContributionSum()}} >= 250) {
+		document.getElementById("openVenture").style.visibility='visible'; 
+	}else {
+		document.getElementById("openVenture").style.visibility='hidden'; 
+	}
+	
     $( "#openVenture" ).button().click(function() {
-		if ({{campaign.getContributionSum()}} >= 250) {
-			$( "#ventureDialog" ).dialog( "open" );
-		}else {
-			alert("This campaign must gay 250 points first!");
-		}
+		$( "#ventureDialog" ).dialog( "open" );
     });
 });
 </script>
