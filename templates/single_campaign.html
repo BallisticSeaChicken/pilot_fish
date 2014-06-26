@@ -1,13 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h2>{{campaign.CampaignTitle}}</h2>
-	<div>
-		<h3>Created on:</h3> {{campaign.DatePosted}}<br>
-		<h3>By:</h3><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
-		<h3>Backed by:</h3> {{campaign.Backers}}<br>
-		<h3>Created on:</h3> {{campaign.DatePosted}}<br>
-		<h3>Description:</h3> {{campaign.ShortDesc}}<br>
-	</div>
-	
+<h2>{{campaign.CampaignTitle}}</h2>
+<div>
+	<h3>Created on:</h3> {{campaign.DatePosted}}<br>
+	<h3>By:</h3><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
+	<h3>Contributions:</h3><b>{{campaign.getContributionSum()}}</b> points from <b>{{campaign.getNumBackers()}}</b> backers<br>
+	<h3>Created on:</h3> {{campaign.DatePosted}}<br>
+	<h3>Description:</h3> {{campaign.ShortDesc}}<br>
+</div>
+
+<div id = "ventureDialog" title = "Turn {{campaign.CampaignTitle}} into a venture">
+	<form method = "post" >
+		<p>
+			Venture Title:<input type = "text" name = "newVentureTitle" value = "{{campaign.CampaignTitle}}" readonly />
+		</p>
+		<p>
+			Short Description:<input type = "text" name = "newVentureShort" value = "{{campaign.ShortDesc}}" readonly />
+		</p>
+		<p>
+			Created by:<input type = "text" name = "newVentureCreator" value = "{{campaign.Person.FirstName}} {{campaign.Person.LastName}}" readonly />
+		</p>
+		<p>
+			Backed by:<input type = "text" name = "newVentureBackers" value = "{{campaign.getNumBackers()}}" readonly />
+		</P>
+		<p>
+			Skills:<input type = "text" name = "newSkill1" id = "newSkill1" /> <input type = "text" name = "newSkill2" id = "newSkill2" /> <input type = "text" name = "newSkill3" id = "newSkill3" />
+		</p>
+		<p>
+			Describe this venture:<br>
+			<textarea>
+			</textarea>
+	</form>
+</div>
+<button id="openVenture">Turn me into a venture!</button>
+<script type = "text/javascript">
+$(document).ready (function() {
+	$( "#ventureDialog" ).dialog({
+		width: 'auto',
+		autoOpen: false,
+		modal: true
+    });
+ 
+    $( "#openVenture" ).button().click(function() {
+		if ({{campaign.getContributionSum()}} >= 250) {
+			$( "#ventureDialog" ).dialog( "open" );
+		}else {
+			alert("This campaign must gay 250 points first!");
+		}
+    });
+});
+</script>
 {% endblock %}

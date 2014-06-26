@@ -1,45 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h3>All Campaigns</h3>
-	<table id="all_campaigns">
-		<thead>
-		<tr>
-			<th align="left">Title</th>
-			<th align="left">Date Posted</th>
-			<th align="left">Contributions</th>
-			<th align="left">Backers</th>
-			<th align="left">Creator</th>
-		</tr>
-		</thead>
-		
-		<tbody>
-		{% for instance in campaigns %}
-		<tr>
-			<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignTitle}}</a></td>
-			<td>{{instance.DatePosted}}</td>
-			<td>{{instance.getContributionSum()}}</td>
-			<td>{{instance.getNumBackers()}}</td>
-			<td><a href="/persons/{{instance.Person.PersonID|urlencode()}}">{{instance.Person.FirstName}} {{instance.Person.LastName}}</d></td>
-		</tr>
-		{% endfor %}
-		</tbody>
-	</table>
+<h3>All Campaigns</h3>
+<table id="all_campaigns">
+	<thead>
+	<tr>
+		<th align="left">Title</th>
+		<th align="left">Date Posted</th>
+		<th align="left">Contributions</th>
+		<th align="left">Backers</th>
+		<th align="left">Creator</th>
+	</tr>
+	</thead>
 	
-	<script type="text/javascript">
-	$(document).ready(function() {
-		$('#all_campaigns').dataTable({
-			"info": false,
-			"paging": false,
-			"aoColumns": [
-				null,
-				null,
-				{ "bSearchable": false },
-				{ "bSearchable": false },
-				null
-			]
-		});
-	} );
-	</script>
-		
+	<tbody>
+	{% for instance in campaigns %}
+	<tr>
+		<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignTitle}}</a></td>
+		<td>{{instance.DatePosted}}</td>
+		<td>{{instance.getContributionSum()}}</td>
+		<td>{{instance.getNumBackers()}}</td>
+		<td><a href="/persons/{{instance.Person.PersonID|urlencode()}}">{{instance.Person.FirstName}} {{instance.Person.LastName}}</d></td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#all_campaigns').dataTable({
+		"info": false,
+		"paging": false,
+		"aoColumns": [
+			null,
+			null,
+			{ "bSearchable": false },
+			{ "bSearchable": false },
+			null
+		]
+	});
+} );
+</script>
+	
 {% endblock %}

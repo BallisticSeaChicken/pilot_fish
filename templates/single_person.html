@@ -1,78 +1,78 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h2>{{person.FirstName}} {{person.LastName}}</h2>
-	<div>
-		<h3>Department:</h3> {{person.Department}}<br>
-		<h3>Phone:</h3> {{person.PhoneNumber}}<br>
-		<h3>Email:</h3> {{person.Email}}<br>
-		<p>
-			<h3>Created Projects:</h3>
-			<table id="campaigns_made" class="campaign_info">
-				<thead>
-				<tr>
-					<th align="left">Title</th>
-					<th align="left">Date Posted</th>
-					<th align="left">Contributions</th>
-					<th align="left">Backers</th>
-				</tr>
-				</thead>
-				
-				<tbody>
-				{% for instance in person.Campaigns %}
-				<tr>
-					<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignTitle}}</a></td>
-					<td>{{instance.DatePosted}}</td>
-					<td>{{instance.getContributionSum()}}</td>
-					<td>{{instance.getNumBackers()}}</td>
-				</tr>
-				{% endfor %}
-				</tbody>
-			</table>
+<h2>{{person.FirstName}} {{person.LastName}}</h2>
+<div>
+	<h3>Department:</h3> {{person.Department}}<br>
+	<h3>Phone:</h3> {{person.PhoneNumber}}<br>
+	<h3>Email:</h3> {{person.Email}}<br>
+	<p>
+		<h3>Created Projects:</h3>
+		<table id="campaigns_made" class="campaign_info">
+			<thead>
+			<tr>
+				<th align="left">Title</th>
+				<th align="left">Date Posted</th>
+				<th align="left">Contributions</th>
+				<th align="left">Backers</th>
+			</tr>
+			</thead>
 			
-			<table id="contributed_to" class="campaign_info">
-				<thead>
-				<tr>
-					<th align="left">Title</th>
-					<th align="left">Date Contributed</th>
-					<th align="left">Contribution</th>
-				</tr>
-				</thead>
-				
-				<tbody>
-				{% for instance in contributed_to %}
-				<tr>
-					<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignName}}</a></td>
-					<td>{{instance.Date}}</td>
-					<td>{{instance.Contribution}}</td>
-				</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-			<script type="text/javascript">
-			$(document).ready(function() {
-				$('#campaigns_made').dataTable({
-					"info": false,
-					"paging": false,
-					"aoColumns": [
-						null,
-						null,
-						{ "bSearchable": false },
-						{ "bSearchable": false }
-					]
-				});
-				
-				$('#contributed_to').dataTable({
-					"info": false,
-					"paging": false,
-					"aoColumns": [
-						null,
-						null,
-						{ "bSearchable": false }
-					]
-				});
-			} );
-			</script>
-		</p>
-	</div>
+			<tbody>
+			{% for instance in person.Campaigns %}
+			<tr>
+				<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignTitle}}</a></td>
+				<td>{{instance.DatePosted}}</td>
+				<td>{{instance.getContributionSum()}}</td>
+				<td>{{instance.getNumBackers()}}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		
+		<table id="contributed_to" class="campaign_info">
+			<thead>
+			<tr>
+				<th align="left">Title</th>
+				<th align="left">Date Contributed</th>
+				<th align="left">Contribution</th>
+			</tr>
+			</thead>
+			
+			<tbody>
+			{% for instance in contributed_to %}
+			<tr>
+				<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignName}}</a></td>
+				<td>{{instance.Date}}</td>
+				<td>{{instance.Contribution}}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$('#campaigns_made').dataTable({
+				"info": false,
+				"paging": false,
+				"aoColumns": [
+					null,
+					null,
+					{ "bSearchable": false },
+					{ "bSearchable": false }
+				]
+			});
+			
+			$('#contributed_to').dataTable({
+				"info": false,
+				"paging": false,
+				"aoColumns": [
+					null,
+					null,
+					{ "bSearchable": false }
+				]
+			});
+		} );
+		</script>
+	</p>
+</div>
 {% endblock %}

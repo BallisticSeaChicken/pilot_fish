@@ -73,7 +73,7 @@ def all_campaigns():
 	
 def get_campaign_by_title(name):
 	session = Session()
-	result = session.query(Campaign).options(joinedload(Campaign.Person)).filter(Campaign.CampaignTitle==name).first()
+	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions)).filter(Campaign.CampaignTitle==name).first()
 	session.close()
 	
 	return result
