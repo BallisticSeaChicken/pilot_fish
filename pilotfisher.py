@@ -1,28 +1,14 @@
 from flask import Flask, url_for, render_template, redirect
-from flask.ext.login import LoginManager
-from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures
+from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution
 
 app = Flask(__name__)
-app.secret_key = 'For Mother Russia'
-lm = LoginManager()
-lm.init_app(app)
-
-@lm.user_loader
-def load_user(PersonID):
-    return get_person_by_id(int(PersonID))
 
 @app.route("/")
 def redirect_home():
     return redirect(url_for('home'))
 	
-@app.route("/ventures")
-def ventures_list():
-	ventures = get_ventures()
-	return render_template('all_ventures.html', ventures = ventures)
-	
-@app.route("/home", methods=["GET", "POST"])	
+@app.route("/home")	
 def home():
-	
 	return render_template('home.html')
 	
 @app.route("/campaigns/")

@@ -20,31 +20,7 @@ class Person(Base):
 	Campaigns = relationship("Campaign", primaryjoin= "Campaign.Creator == Person.PersonID",  backref="Person")
 	
 	ContributedTo = relationship("Contribution", primaryjoin= "Contribution.ContributorID == Person.PersonID", backref="Contributor")
-	
-	Ventures = relationship("Venture", primaryjoin = "Venture.CreatorID == Person.PersonID", backref="Creator")
 
-	def is_authenticated(self):
-		return True
-
-	def is_active(self):
-		return True
-
-	def is_anonymous(self):
-		return False
-
-	def get_id(self):
-		return PersonID
-
-	def __repr__(self):
-		return '<User %r>' % (self.PersonID)
-
-class Venture(Base):
-	__tablename__ = 'Ventures'
-	Title = Column(String(20), primary_key = True)
-	ShortDesc = Column(String(300))
-	Backers = Column(Integer)
-	CreatorID = Column(Integer, ForeignKey('Persons.PersonID'))
-	
 class Campaign(Base):
 	__tablename__ = 'Campaigns'
 	CampaignTitle = Column(String(50), primary_key = True)
@@ -70,20 +46,6 @@ class Contribution(Base):
 	CampaignName = Column(String, ForeignKey('Campaigns.CampaignTitle'))
 	Contribution = Column(Integer)
 	
-def get_ventures(title = None, creatorID = None):
-	session = Session()
-	ventures = session.query(Venture).options(joinedload(Venture.Creator))
-	
-	if(title):
-		ventures = ventures.filter(Venture.Title == title).first()
-	elif(creatorID):
-		ventures = ventures.filter(Venture.CreatorID == creatorID).all()
-	else:
-		ventures = ventures.all()
-		
-	session.close()
-	
-	return ventures
 	
 def get_contribution(id = None, contributor = None, campaign = None):
 	session = Session()
