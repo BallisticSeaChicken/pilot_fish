@@ -1,29 +1,98 @@
 <html>
-  <head>
-    <title>pilot_fish</title>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
-	<script type="text/javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
-	<script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-	<LINK href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-	
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<head>
+		<title>pilot_fish</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+		<script type="text/javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+		<script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<LINK href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-  </head>
-  <body>
-    <div>Pilot Fish: <a href="/home">Home</a>
-		<a href="/campaigns">Campaigns</a>
-		<a href="/persons">Persons</a>
-		<a href="/ideas">Ideas</a>
-		<a href="/ventures">Ventures</a>
-	</div>
-    <hr>
-    {% block content %}{% endblock %}
-  </body>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script type = "text/javascript">
+		$(document).ready (function() {
+			$( "#signUp" ).dialog({
+				width: 'auto',
+				autoOpen: false,
+				modal: true
+			});
+		 
+			$( "#openSignUp" ).button().click(function() {
+				$( "#signUp" ).dialog( "open" );
+			});
+			  
+			$( "#logIn" ).dialog({
+				width: 'auto',
+				autoOpen: false,
+				modal: true
+			});
+		 
+			$( "#openLogIn" ).button().click(function() {
+				$( "#logIn" ).dialog( "open" );
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<div class="navbar navbar-default" role="navigation">
+			<div class = "container-fluid">
+				<div>
+					<a class="navbar-brand" href="#">Pilot Fish</a>
+					<ul class="nav navbar-nav">
+						<li><a href="/home">Home</a></li>
+						<li><a href="/campaigns">Campaigns</a></li>
+						<li><a href="/persons">Persons</a></li>
+						<li><a href="/ideas">Ideas</a></li>
+						<li><a href="/ventures">Ventures</a></li>
+						<form class="navbar-form navbar-right" role="form">
+							<button id="openSignUp" class="btn btn-success">Sign Up</button></li>
+							<button id="openLogIn" class="btn btn-success">Login</button></li>
+						</form>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class = "container">
+			{% block content %}{% endblock %}
+		</div>
+		<div id = "signUp" class = "credentials" title = "Create a new user">
+			<form method = "post" >
+				<p>
+					UserID:<input type = "text" name = "newUserName" id = "newUserName" />
+					Password:<input type = "password" name = "newPassword" id = "newPassword" />
+				</p>
+				<p>
+					First Name:<input type = "text" name = "newFirstName" id = "newFirstName" />
+					Last Name:<input type = "text" name = "newLastName" id = "newLastName" />
+				</p>
+				<p>
+					Department:<input type = "text" name = "newUserDepartment" id = "newUserDepartment" />
+					Position:<input type = "text" name = "newUserPosition" id = "newUserPosition" />
+					Office:<input type = "text" name = "newUserOffice" id = "newUserOffice" />
+				</P>
+				<p>
+					Skills:<input type = "text" name = "newSkill1" id = "newSkill1" /> <input type = "text" name = "newSkill2" id = "newSkill2" /> <input type = "text" name = "newSkill3" id = "newSkill3" />
+				</p>
+				<p>
+					Interests:<input type = "text" name = "newInterest1" id = "newInterest1" /> <input type = "text" name = "newInterest2" id = "newInterest2" />
+				</p>
+				<p>
+					Email:<input type = "text" name = "newUserEmail" id = "newUserEmail" />
+					Phone Number:<input type = "text" name = "newUserPhone" id = "newUserPhone" />
+				</p>
+			</form>
+		</div>
+		<div id = "logIn" class = "credentials" title = "Welcome back to Pilot Fish">
+			<form method = "post" >
+				UserID:<input type = "text" name = "newUserName" id = "newUserName" />
+				Password:<input type = "password" name = "newPassword" id = "newPassword" />
+			</form>
+		</div>
+	</body>
 </html>

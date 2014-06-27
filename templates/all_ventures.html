@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>All Campaigns</h3>
+<table id="all_ventures">
+	<thead>
+	<tr>
+		<th align="left">Title</th>
+		<th align="left">Date Upgraded</th>
+		<th align="left">Backers</th>
+		<th align="left">Creator</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	{% for instance in ventures %}
+	<tr>
+		<td><a href="/ventures/{{instance.Title|urlencode()}}">{{instance.Title}}</a></td>
+		<td>{{instance.DatePosted}}</td>
+		<td>{{instance.Backers}}</td>
+		<td><a href="/persons/{{instance.Creator.PersonID|urlencode()}}">{{instance.Creator.FirstName}} {{instance.Creator.LastName}}</d></td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#all_ventures').dataTable({
+		"info": false,
+		"paging": false,
+		"aoColumns": [
+			null,
+			null,
+			{ "bSearchable": false },
+			null
+		]
+	});
+} );
+</script>
+	
+{% endblock %}
