@@ -1,14 +1,41 @@
-from flask import Flask, url_for, render_template, redirect
+from flask import Flask, flash, url_for, render_template, redirect, request
 from flask.ext.login import LoginManager
 from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures
+from forms import SignUpForm, LogInForm
 
 app = Flask(__name__)
+app.config.from_object('config')
 
 @app.route("/")
 def redirect_home():
     return redirect(url_for('home'))
+
+@app.route("/signup")
+def sign_up():
+	form = SignUpForm()
+	return render_template('sign_up.html', 
+		title = 'Sign Up',
+		form = form)
+
+@app.route("/login", methods=['GET','POST'])
+def log_in():
+	form = LogInForm()
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			print("<-----------------------------------------")
+			registered_user = get_person_by_id(form.PersonID.data, form.Password.data)
+			if registered_user is None:
+				flash('Username or Password is invalid' , 'error')
+				return redirect(url_for('log_in'))
+			login_user(registered_user)
+			flash('Logged in successfully')
+			return redirect(url_for('home'))
+		
+	return render_template('log_in.html', 
+		title = 'Log In',
+		form = form)
 	
-@app.route("/ventures")
+@app.route("/ventures/")
 def ventures_list():
 	ventures = get_ventures()
 	return render_template('all_ventures.html', ventures = ventures)

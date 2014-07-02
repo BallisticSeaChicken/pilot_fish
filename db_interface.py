@@ -123,9 +123,14 @@ def get_all_persons():
 	
 	return persons
 	
-def get_person_by_id(id):
+def get_person_by_id(id, password = None):
 	session = Session()
-	person = session.query(Person).options(joinedload(Person.Campaigns).joinedload(Campaign.IndividualContributions)).filter(Person.PersonID == id).first()
+	person = session.query(Person).options(joinedload(Person.Campaigns).joinedload(Campaign.IndividualContributions)).filter(Person.PersonID == id)
+	
+	if(password):
+		person = person.filter(Person.Password == password)
+	
+	person = person.first()
 	session.close()
 	
 	return person

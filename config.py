@@ -1,2 +1,2 @@
 CSRF_ENABLED = True
-SECRET_KEY = 'fingernails grow faster than toenails'
+SECRET_KEY = 'for mother russia'

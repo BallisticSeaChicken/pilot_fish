@@ -15,49 +15,37 @@
 
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-		<script type = "text/javascript">
-		$(document).ready (function() {
-			$( "#signUp" ).dialog({
-				width: 'auto',
-				autoOpen: false,
-				modal: true
-			});
-		 
-			$( "#openSignUp" ).button().click(function() {
-				$( "#signUp" ).dialog( "open" );
-			});
-			  
-			$( "#logIn" ).dialog({
-				width: 'auto',
-				autoOpen: false,
-				modal: true
-			});
-		 
-			$( "#openLogIn" ).button().click(function() {
-				$( "#logIn" ).dialog( "open" );
-			});
-		});
-		</script>
 	</head>
 	<body>
-		<div class="navbar navbar-default" role="navigation" id = "navBar">
-			<div class = "container-fluid">
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+			  <li>{{ message }}</li>
+			{% endfor %}
+			</ul>
+		  {% endif %}
+		{% endwith %}
+		<div class="navbar navbar-default navbar-inverse" role="navigation" id = "navBar">
+			<div class = "container container-fluid">
 				<div>
-					<a class="navbar-brand" href="/home">Pilot Fish</a>
+					<a class="navbar-brand" href="/home"><img src="../images/logo_sm.jpg" class="img-responsive" alt="Responsive image"/></a>
 					<ul class="nav navbar-nav">
 						<li><a href="/campaigns">Campaigns</a></li>
 						<li><a href="/persons">Persons</a></li>
 						<li><a href="/ideas">Ideas</a></li>
 						<li><a href="/ventures">Ventures</a></li>
-						<form class="navbar-form navbar-right" role="form">
-							<button id="openSignUp" class="btn btn-success">Sign Up</button></li>
-							<button id="openLogIn" class="btn btn-success">Login</button></li>
-						</form>
 					</ul>
+				</div>
+				<div class="navbar-collapse collapse">
+					<form class="navbar-form navbar-right" role="form">
+						<a href = "/signup" id="openSignUp" class="btn btn-success">Sign Up</a>
+						<a href = "/login" id="openLogIn" class="btn btn-success">Login</a>
+					</form>
 				</div>
 			</div>
 		</div>
-		<div class = "container">
+		<div class = "container container-fluid">
 			{% block content %}{% endblock %}
 		</div>
 		<div id = "signUp" class = "credentials" title = "Create a new user">
@@ -93,10 +81,20 @@
 				Password:<input type = "password" name = "newPassword" id = "newPassword" />
 			</form>
 		</div>
+		<script type = "text/javascript">
+		$(function() {
+			$( "#signUp" ).dialog({
+				width: 'auto',
+				autoOpen: false,
+				modal: true
+			});
+			  
+			$( "#logIn" ).dialog({
+				width: 'auto',
+				autoOpen: false,
+				modal: true
+			});
+		});
+		</script>
 	</body>
-	<style>
-		#navBar {
-			background:#E0E0E0;
-		}
-	</style>
 </html>
