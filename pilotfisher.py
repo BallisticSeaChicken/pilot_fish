@@ -1,10 +1,17 @@
 from flask import Flask, flash, url_for, render_template, redirect, request
-from flask.ext.login import LoginManager
+from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures
 from forms import SignUpForm, LogInForm
 
 app = Flask(__name__)
 app.config.from_object('config')
+lm = LoginManager()
+lm.init_app(app)
+lm.login_view = 'login'
+
+@lm.user_loader
+def load_user(id):
+    return get_person_by_id(int(id))
 
 @app.route("/")
 def redirect_home():

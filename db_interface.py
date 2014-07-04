@@ -33,7 +33,7 @@ class Person(Base):
 		return False
 
 	def get_id(self):
-		return PersonID
+		return self.PersonID
 
 	def __repr__(self):
 		return '<User %r>' % (self.PersonID)
