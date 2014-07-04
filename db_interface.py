@@ -9,19 +9,46 @@ Session = sessionmaker(bind = engine)
 
 class Person(Base):
 	__tablename__ = 'Persons'
-	PersonID = Column(Integer, primary_key = True)
+	PersonID = Column(Integer, primary_key = True, autoincrement=False)
 	FirstName = Column(String(50))
 	LastName = Column(String(50))
 	Password = Column(String(20))
 	Department = Column(String(20))
+	Position = Column(String(20))
+	Office = Column(String(20))
 	PhoneNumber = Column(String(20))
 	Email = Column(String(50))
+	
+	Skill1 = Column(String(20))
+	Skill2 = Column(String(20))
+	Skill3 = Column(String(20))
+	
+	Interest1 = Column(String(20))
+	Interest2 = Column(String(20))
 	
 	Campaigns = relationship("Campaign", primaryjoin= "Campaign.Creator == Person.PersonID",  backref="Person")
 	
 	ContributedTo = relationship("Contribution", primaryjoin= "Contribution.ContributorID == Person.PersonID", backref="Contributor")
 
 	Ventures = relationship("Venture", primaryjoin = "Venture.CreatorID == Person.PersonID", backref="Creator")
+	
+	def __init__(self, PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skill1, Skill2, Skill3, Interest1, Interest2):
+		self.PersonID = PersonID
+		self.FirstName = FirstName
+		self.LastName = LastName
+		self.Password = Password
+		self.Department = Department
+		self.Position = Position
+		self.Office = Office
+		self.PhoneNumber = PhoneNumber
+		self.Email = Email
+		
+		self.Skill1 = Skill1
+		self.Skill2 = Skill2
+		self.Skill3 = Skill3
+		
+		self.Interest1 = Interest1
+		self.Interest2 = Interest2
 
 	def is_authenticated(self):
 		return True
@@ -70,6 +97,14 @@ class Contribution(Base):
 	CampaignName = Column(String, ForeignKey('Campaigns.CampaignTitle'))
 	Contribution = Column(Integer)
 
+def commit_to_db(target):
+	print '<-----committing---------------'
+	session = Session()
+	session.add(target)
+	session.commit()
+	
+	return target
+	
 def get_ventures(title = None, creatorID = None):
 	session = Session()
 	ventures = session.query(Venture).options(joinedload(Venture.Creator))
