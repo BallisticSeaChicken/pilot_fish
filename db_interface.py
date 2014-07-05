@@ -63,7 +63,7 @@ class Person(Base):
 		return self.PersonID
 
 	def __repr__(self):
-		return '<User %r>' % (self.PersonID)
+		return self.FirstName
 
 class Venture(Base):
 	__tablename__ = 'Ventures'

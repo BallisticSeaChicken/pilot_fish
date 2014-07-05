@@ -28,7 +28,6 @@ def sign_up():
 	form = SignUpForm()
 	if request.method == 'POST':
 		if form.validate_on_submit():
-			print '<-------Submitting---------------'
 			PersonID = form.PersonID.data
 			FirstName = form.FirstName.data
 			LastName = form.LastName.data
@@ -51,7 +50,6 @@ def sign_up():
 			user = commit_to_db(user)
 		
 			login_user(user)
-			session['logged_in'] = True
 			flash('Signed in successfully')
 			return redirect(url_for('person_info', id = user.get_id()))
 	
@@ -74,7 +72,6 @@ def log_in():
 				flash('Username or Password is invalid' , 'error')
 				return redirect(url_for('log_in'))
 			login_user(registered_user)
-			session['logged_in'] = True
 			flash('Logged in successfully')
 			return redirect(url_for('person_info', id = registered_user.get_id()))
 		
@@ -85,7 +82,6 @@ def log_in():
 @app.route('/logout')
 def logout():
 	logout_user()
-	session['logged_in'] = False
 	return redirect(url_for('home'))
 	
 @app.route("/ventures/")

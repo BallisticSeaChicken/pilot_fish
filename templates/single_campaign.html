@@ -9,7 +9,6 @@
 	<h3>Created on:</h3> {{campaign.DatePosted}}<br>
 	<h3>Description:</h3> {{campaign.ShortDesc}}<br>
 </div>
-
 <div id = "ventureDialog" title = "Turn {{campaign.CampaignTitle}} into a venture">
 	<form method = "post" >
 		<p>
@@ -31,9 +30,28 @@
 			Describe this venture:<br>
 			<textarea>
 			</textarea>
+		</p>
 	</form>
 </div>
-<button id="openVenture" class = "btn btn-primary">Turn me into a venture!</button>
+<div id = "contributeDialog" title = "Contribute to {{campaign.CampaignTitle}}!">
+	<form method = "post" >
+		<p>
+			Campaign Title: <input type = "text" name = "campaignTitle" value = "{{campaign.CampaignTitle}}" readonly style="border:0; font-weight:bold;"/>
+		</p>
+		<p>
+		  <label for="amount">Contribution amount (5 point increments):</label>
+		  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;" />
+		</p>
+		<div id="slider"></div>
+	</form>
+</div>
+{% if g.user.get_id() == campaign.Person.PersonID %}
+	{% if campaign.getContributionSum() >= 250 %}
+	<button id="openVenture" class = "btn btn-primary">Turn me into a venture!</button>
+	{% endif %}
+{% elif g.user.is_authenticated() %}
+<button id="openContribute" class = "btn btn-primary">Help me become a venture!</button>
+{% endif %}
 <script type = "text/javascript">
 $(document).ready (function() {
 	$( "#ventureDialog" ).dialog({
@@ -42,15 +60,32 @@ $(document).ready (function() {
 		modal: true
     });
 	
-	if ({{campaign.getContributionSum()}} >= 250) {
-		document.getElementById("openVenture").style.visibility='visible'; 
-	}else {
-		document.getElementById("openVenture").style.visibility='hidden'; 
-	}
+	$( "#contributeDialog" ).dialog({
+		width: 'auto',
+		autoOpen: false,
+		modal: true
+    });
 	
     $( "#openVenture" ).button().click(function() {
 		$( "#ventureDialog" ).dialog( "open" );
     });
+	
+	$( "#openContribute" ).button().click(function() {
+		
+		$( "#contributeDialog" ).dialog( "open" );
+    });
+	
+	$( "#slider" ).slider({
+      value:0,
+      min: 0,
+      max: 100,
+      step: 5,
+      slide: function( event, ui ) {
+        $( "#amount" ).val( ui.value );
+      }
+    });
+	
+    $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
 });
 </script>
 {% endblock %}
