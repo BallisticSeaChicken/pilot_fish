@@ -1,7 +1,8 @@
 from flask import Flask, flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from db_interface import Campaign, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db
+from db_interface import Campaign, Contribution, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db
 from forms import SignUpForm, LogInForm
+import datetime
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -48,10 +49,11 @@ def sign_up():
 			user = Person(PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skill1, Skill2, Skill3, Interest1, Interest2)
 			
 			user = commit_to_db(user)
-		
-			login_user(user)
+			
+			registered_user = get_person_by_id(form.PersonID.data)
+			login_user(registered_user)
 			flash('Signed in successfully')
-			return redirect(url_for('person_info', id = user.get_id()))
+			return redirect(url_for('person_info', id = g.user.get_id()))
 	
 	return render_template('sign_up.html', 
 		title = 'Sign Up',
@@ -97,9 +99,14 @@ def home():
 def campaigns_list():
 	campaigns_list = all_campaigns()
 	return render_template('campaigns_all.html', campaigns = campaigns_list)
-	
-@app.route("/campaigns/<name>")
+
+@app.route("/campaigns/<name>", methods=["GET", "POST"])
 def campaign_info(name):
+	if request.method == 'POST':
+		if request.form['btn'] == 'Submit' and  request.form['amount'] > 0:
+			contribution = Contribution(g.user.get_id(), request.form['campaignTitle'], request.form['amount'], datetime.datetime.now())
+		commit_to_db(contribution)
+		flash('Contributed %s points to %s!' % (request.form['amount'], name))
 	campaign = get_campaign_by_title(name)
 	return render_template('single_campaign.html', campaign = campaign)
 	

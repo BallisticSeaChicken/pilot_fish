@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="page-header"><h3>{{person.FirstName}} {{person.LastName}}</h3></div>
+<div class="page-header"><h4>{{person.FirstName}} {{person.LastName}}</h4></div>
 <div class = "row">
 	<div class = "col-md-8">
 		<p>
-			<h3>Created Projects:</h3>
+			<h4>Created Projects:</h4>
 			<table id="campaigns_made" class="campaign_info">
 				<thead>
 				<tr>
@@ -29,7 +29,7 @@
 			</table>
 		</p>
 		<p>
-			<h3>Backed Projects:</h3>
+			<h4>Backed Projects:</h4>
 			<table id="contributed_to" class="campaign_info">
 				<thead>
 				<tr>
@@ -43,7 +43,7 @@
 				{% for instance in contributed_to %}
 				<tr>
 					<td><a href="/campaigns/{{instance.CampaignName|urlencode()}}">{{instance.CampaignName}}</a></td>
-					<td>{{instance.Date}}</td>
+					<td>{{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}</td>
 					<td>{{instance.Contribution}}</td>
 				</tr>
 				{% endfor %}
@@ -76,9 +76,9 @@
 		</p>
 	</div>
 	<div class = "col-md-4">
-		<h3>Department:</h3> {{person.Department}}<br>
-		<h3>Phone:</h3> {{person.PhoneNumber}}<br>
-		<h3>Email:</h3> {{person.Email}}<br>
+		<h4>Department:</h4> {{person.Department}}<br>
+		<h4>Phone:</h4> {{person.PhoneNumber}}<br>
+		<h4>Email:</h4> {{person.Email}}<br>
 	</div>
 </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, create_engine, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Date, DateTime, create_engine, ForeignKey, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, backref, joinedload
 
@@ -92,10 +92,16 @@ class Campaign(Base):
 	
 class Contribution(Base):
 	__tablename__ = 'Contributions'
-	ContributionID = Column(Integer, primary_key = True)
-	ContributorID = Column(Integer, ForeignKey('Persons.PersonID'))
-	CampaignName = Column(String, ForeignKey('Campaigns.CampaignTitle'))
+	ContributorID = Column(Integer, ForeignKey('Persons.PersonID'), primary_key = True)
+	CampaignName = Column(String, ForeignKey('Campaigns.CampaignTitle'), primary_key = True)
 	Contribution = Column(Integer)
+	SubTime = Column(DateTime, primary_key = True)
+	
+	def __init__(self, ContributorID, CampaignName, Contribution, SubTime):
+		self.ContributorID = ContributorID
+		self.CampaignName = CampaignName
+		self.Contribution = Contribution
+		self.SubTime = SubTime
 
 def commit_to_db(target):
 	print '<-----committing---------------'
@@ -103,7 +109,7 @@ def commit_to_db(target):
 	session.add(target)
 	session.commit()
 	
-	return target
+	session.close()
 	
 def get_ventures(title = None, creatorID = None):
 	session = Session()
@@ -120,12 +126,10 @@ def get_ventures(title = None, creatorID = None):
 	
 	return ventures
 	
-def get_contribution(id = None, contributor = None, campaign = None):
+def get_contribution(contributor = None, campaign = None):
 	session = Session()
 	contributions = session.query(Contribution).options(joinedload(Contribution.Contributor), joinedload(Contribution.ContributionTarget))
 	
-	if(id):
-		contributions = contributions.filter(Contribution.ContributionID == id)
 	if(contributor):
 		contributions = contributions.filter(Contribution.ContributorID == contributor)
 	if(campaign):
