@@ -103,10 +103,12 @@ def campaigns_list():
 @app.route("/campaigns/<name>", methods=["GET", "POST"])
 def campaign_info(name):
 	if request.method == 'POST':
-		if request.form['btn'] == 'Submit' and  request.form['amount'] > 0:
+		if request.form['btn'] == 'Submit' and  int(request.form['amount']) > 0:
 			contribution = Contribution(g.user.get_id(), request.form['campaignTitle'], request.form['amount'], datetime.datetime.now())
-		commit_to_db(contribution)
-		flash('Contributed %s points to %s!' % (request.form['amount'], name))
+			commit_to_db(contribution)
+			flash('Contributed %s points to %s!' % (request.form['amount'], name))
+		elif not int(request.form['amount']) > 0:
+			flash('Please contribute non-zero amount')
 	campaign = get_campaign_by_title(name)
 	return render_template('single_campaign.html', campaign = campaign)
 	
