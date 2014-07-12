@@ -15,7 +15,10 @@
 		Position:{{form.Position(size=20)}}
 		Office:{{form.Office(size=20)}}
 	<hr>
-		Skills:{{form.Skill1(size=20)}} {{form.Skill2(size=20)}} {{form.Skill3(size=20)}}
+		<label for="skills">Tell us about your skills</label>
+		<fieldset id = "skills">
+			Skills:{{form.Skill1}} {{form.Skill2}} {{form.Skill3}}
+		</fieldset>
 	<hr>
 		Interests:{{form.Interest1(size=20)}} {{form.Interest2(size=20)}}
 	<hr>
@@ -24,4 +27,8 @@
 	</p>
     <p><input type="submit" value="Sign Up"></p>
 </form>
+<script type = "text/javascript">
+$(document).ready(function() {
+	$( "#skill1" ).selectmenu();
+});
 {% endblock %}

@@ -102,15 +102,25 @@ def campaigns_list():
 
 @app.route("/campaigns/<name>", methods=["GET", "POST"])
 def campaign_info(name):
+	campaign = get_campaign_by_title(name)
 	if request.method == 'POST':
+		print "<---------------------posting"
 		if request.form['btn'] == 'Submit' and  int(request.form['amount']) > 0:
+			print "<--------------------- amount > 0"
 			contribution = Contribution(g.user.get_id(), request.form['campaignTitle'], request.form['amount'], datetime.datetime.now())
 			commit_to_db(contribution)
 			flash('Contributed %s points to %s!' % (request.form['amount'], name))
 		elif not int(request.form['amount']) > 0:
+			print "<--------------------- amount not > 0"
 			flash('Please contribute non-zero amount')
-	campaign = get_campaign_by_title(name)
-	return render_template('single_campaign.html', campaign = campaign)
+		
+		return render_template('single_campaign.html', campaign = campaign, contribute_limit = 100 - g.user.get_monthly_contribution())
+	
+	if request.method == 'GET':
+		if g.user is not None:
+			if g.user.is_authenticated():
+				return render_template('single_campaign.html', campaign = campaign, contribute_limit = 100 - g.user.get_monthly_contribution())
+		return render_template('single_campaign.html', campaign = campaign)
 	
 @app.route("/persons/")
 def persons_list():

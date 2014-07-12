@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, PasswordField, validators
+from wtforms import TextField, BooleanField, PasswordField, validators, SelectField
 from wtforms.validators import Required, DataRequired
 
 class SignUpForm(Form):
@@ -10,9 +10,13 @@ class SignUpForm(Form):
 	Department = TextField('Department', validators = [Required()])
 	Position = TextField('Position', validators = [Required()])
 	Office = TextField('Office', validators = [Required()])
-	Skill1 = TextField('Skill 1', validators = [Required()])
-	Skill2 = TextField('Skill 2', validators = [Required()])
-	Skill3 = TextField('Skill 3', validators = [Required()])
+	
+	#choosing skills
+	skillSet = [('Arts and Crafts','Arts and Crafts'), ('Outdoors and Athletics', 'Outdoors and Athletics'), ('Science', 'Science'), ('Technology', 'Technology'), ('Communications', 'Communications')]
+	Skill1 = SelectField('Skill 1', choices = skillSet, validators = [Required()])
+	Skill2 = SelectField('Skill 2', choices = skillSet, validators = [Required()])
+	Skill3 = SelectField('Skill 3', choices = skillSet, validators = [Required()])
+	
 	Interest1 = TextField('Interest 1', validators = [Required()])
 	Interest2 = TextField('Interest 2', validators = [Required()])
 	Email = TextField('Email', validators = [Required()])

@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Date, DateTime, create_engine, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Date, DateTime, create_engine, ForeignKey, func, Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, backref, joinedload
+from sqlalchemy.orm import sessionmaker, relationship, backref, joinedload, subqueryload
+import datetime
 
 engine=create_engine('mssql+pyodbc://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
 engine.connect()
@@ -31,6 +32,16 @@ class Person(Base):
 	ContributedTo = relationship("Contribution", primaryjoin= "Contribution.ContributorID == Person.PersonID", backref="Contributor")
 
 	Ventures = relationship("Venture", primaryjoin = "Venture.CreatorID == Person.PersonID", backref="Creator")
+	
+	Comments = relationship('Comment', primaryjoin = 'Comment.Author == Person.PersonID', backref='Commentator')
+	
+	def get_monthly_contribution(self):
+		sum = int()
+		today = datetime.datetime.now()
+		for c in self.ContributedTo:
+			if(c.SubTime.year == today.year and c.SubTime.month == today.month):
+				sum += c.Contribution
+		return sum
 	
 	def __init__(self, PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skill1, Skill2, Skill3, Interest1, Interest2):
 		self.PersonID = PersonID
@@ -67,7 +78,7 @@ class Person(Base):
 
 class Venture(Base):
 	__tablename__ = 'Ventures'
-	Title = Column(String(20), primary_key = True)
+	Title = Column(String(50), primary_key = True)
 	ShortDesc = Column(String(300))
 	Backers = Column(Integer)
 	CreatorID = Column(Integer, ForeignKey('Persons.PersonID'))
@@ -81,6 +92,8 @@ class Campaign(Base):
 	
 	IndividualContributions = relationship("Contribution", primaryjoin= "Contribution.CampaignName == Campaign.CampaignTitle", backref="ContributionTarget")
 	
+	Comments = relationship('Comment', primaryjoin = 'Comment.ParentPost == Campaign.CampaignTitle', backref='TopicCampaign')
+	
 	def getContributionSum(self):
 		sum = int()
 		for c in self.IndividualContributions:
@@ -93,7 +106,7 @@ class Campaign(Base):
 class Contribution(Base):
 	__tablename__ = 'Contributions'
 	ContributorID = Column(Integer, ForeignKey('Persons.PersonID'), primary_key = True)
-	CampaignName = Column(String, ForeignKey('Campaigns.CampaignTitle'), primary_key = True)
+	CampaignName = Column(String(20), ForeignKey('Campaigns.CampaignTitle'), primary_key = True)
 	Contribution = Column(Integer)
 	SubTime = Column(DateTime, primary_key = True)
 	
@@ -102,6 +115,16 @@ class Contribution(Base):
 		self.CampaignName = CampaignName
 		self.Contribution = Contribution
 		self.SubTime = SubTime
+		
+class Comment(Base):
+	__tablename__ = 'Comments'
+	ParentPost = Column(String(50), ForeignKey('Campaigns.CampaignTitle'), primary_key = True)
+	Author = Column(String(20), ForeignKey('Persons.PersonID'), primary_key = True)
+	SubTime = Column(DateTime, primary_key = True)
+	Content = Column(Text)
+
+
+#================functions================
 
 def commit_to_db(target):
 	print '<-----committing---------------'
@@ -164,7 +187,7 @@ def get_all_persons():
 	
 def get_person_by_id(id, password = None):
 	session = Session()
-	person = session.query(Person).options(joinedload(Person.Campaigns).joinedload(Campaign.IndividualContributions)).filter(Person.PersonID == id)
+	person = session.query(Person).options(joinedload(Person.Campaigns).joinedload(Campaign.IndividualContributions), subqueryload(Person.ContributedTo)).filter(Person.PersonID == id)
 	
 	if(password):
 		person = person.filter(Person.Password == password)

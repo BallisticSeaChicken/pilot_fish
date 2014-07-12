@@ -34,6 +34,7 @@
 		</p>
 	</form>
 </div>
+{% if g.user.is_authenticated() %}
 <div id = "contributeDialog" title = "Contribute to {{campaign.CampaignTitle}}!">
 	<form method = "post" >
 		<p>
@@ -49,6 +50,7 @@
 		<input type="submit" name="btn" value="Submit">
 	</form>
 </div>
+{% endif %}
 {% if g.user.get_id() == campaign.Person.PersonID %}
 	{% if campaign.getContributionSum() >= 250 %}
 	<button id="openVenture" class = "btn btn-primary">Turn me into a venture!</button>
@@ -63,15 +65,17 @@ $(document).ready (function() {
 		autoOpen: false,
 		modal: true
     });
+
+    $( "#openVenture" ).button().click(function() {
+		$( "#ventureDialog" ).dialog( "open" );
+    });
+	
+	{% if g.user.is_authenticated() %}
 	
 	$( "#contributeDialog" ).dialog({
 		width: 'auto',
 		autoOpen: false,
 		modal: true
-    });
-	
-    $( "#openVenture" ).button().click(function() {
-		$( "#ventureDialog" ).dialog( "open" );
     });
 	
 	$( "#openContribute" ).button().click(function() {
@@ -80,16 +84,18 @@ $(document).ready (function() {
     });
 	
 	$( "#slider" ).slider({
-      value:0,
-      min: 0,
-      max: 100,
-      step: 5,
-      slide: function( event, ui ) {
+		value:0,
+		min: 0,
+		max: {{contribute_limit}},
+		step: 5,
+		slide: function( event, ui ) {
         $( "#amount" ).val( ui.value );
       }
     });
 	
     $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
+	
+	{% endif %}
 });
 </script>
 {% endblock %}
