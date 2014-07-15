@@ -36,7 +36,7 @@
 </div>
 {% if g.user.is_authenticated() %}
 <div id = "contributeDialog" title = "Contribute to {{campaign.CampaignTitle}}!">
-	<form method = "post" >
+	<form action="{{url_for('campaign_info', name = campaign.CampaignTitle)}}" method = "post" >
 		<p>
 			Campaign Title: <input type = "text" name = "campaignTitle" value = "{{campaign.CampaignTitle}}" readonly style="border:0; font-weight:bold;"/>
 		</p>

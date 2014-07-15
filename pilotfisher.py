@@ -116,6 +116,7 @@ def campaign_info(name):
 			if postForm.validate_on_submit():
 				comment = Comment(campaign.CampaignTitle, g.user.get_id(), postForm.body.data)
 				commit_to_db(comment)
+			return redirect(url_for('campaign_info', name = name))
 	
 	if g.user is not None and g.user.is_authenticated():
 		return render_template('single_campaign.html', campaign = campaign, form = postForm, contribute_limit = 100 - g.user.get_monthly_contribution())
