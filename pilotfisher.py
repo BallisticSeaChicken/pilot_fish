@@ -1,6 +1,7 @@
 from flask import Flask, flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from db_interface import Campaign, Contribution, Comment, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db
+from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db
+from db_model import Campaign, Contribution, Comment, Person
 from forms import SignUpForm, LogInForm, PostForm
 import datetime
 

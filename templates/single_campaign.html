@@ -7,7 +7,7 @@
 	<h4>By:</h4><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
 	<h4>Contributions:</h4><b>{{campaign.getContributionSum()}}</b> points from <b>{{campaign.getNumBackers()}}</b> backers<br>
 	<h4>Created on:</h4> {{campaign.DatePosted}}<br>
-	<h4>Description:</h4> {{campaign.ShortDesc}}<br>
+	<h4>Description:</h4> {{campaign.Description}}<br>
 </div>
 <hr>
 <div id = "ventureDialog" title = "Turn {{campaign.CampaignTitle}} into a venture">
@@ -16,7 +16,7 @@
 			Venture Title:<input type = "text" name = "newVentureTitle" value = "{{campaign.CampaignTitle}}" readonly />
 		</p>
 		<p>
-			Short Description:<input type = "text" name = "newVentureShort" value = "{{campaign.ShortDesc}}" readonly />
+			Short Description:<input type = "text" name = "newVentureShort" value = "{{campaign.Description}}" readonly />
 		</p>
 		<p>
 			Created by:<input type = "text" name = "newVentureCreator" value = "{{campaign.Person.FirstName}} {{campaign.Person.LastName}}" readonly />
@@ -62,7 +62,7 @@
 	   {{form.hidden_tag()}}
 	   <dl>
 		  <dt>Leave a comment:
-		  <dd>{{ form.body(cols="45", rows="5") }}
+		  <dd>{{ form.body(cols="70", rows="5") }}
 	   </dl>
 	   <p>
 		  <button type="submit" name = "btn" value = "Comment" class = "btn btn-warning">Submit Comment</button>
