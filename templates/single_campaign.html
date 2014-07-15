@@ -47,16 +47,35 @@
 		<p>
 			<div id="slider"></div>
 		</p>
-		<input type="submit" name="btn" value="Submit">
+		<button type="submit" name = "btn" value="Contribute">Contribute</button>
 	</form>
 </div>
-{% endif %}
 {% if g.user.get_id() == campaign.Person.PersonID %}
 	{% if campaign.getContributionSum() >= 250 %}
 	<button id="openVenture" class = "btn btn-primary">Turn me into a venture!</button>
 	{% endif %}
-{% elif g.user.is_authenticated() %}
-<button id="openContribute" class = "btn btn-primary">Help me become a venture!</button>
+{% else %}
+	<button id="openContribute" class = "btn btn-primary">Help me become a venture!</button>
+{% endif %}
+<p>
+	<form method="post" id = "comment_submitter">
+	   {{form.hidden_tag()}}
+	   <dl>
+		  <dt>Leave a comment:
+		  <dd>{{ form.body(cols="45", rows="5") }}
+	   </dl>
+	   <p>
+		  <button type="submit" name = "btn" value = "Comment" class = "btn btn-warning">Submit Comment</button>
+	</form>
+</p>
+{% endif %}
+{% if campaign.Comments %}
+	{% for instance in campaign.Comments %}
+	<blockquote>
+		<p>{{instance.Content}}</p>
+		<footer>{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}} on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}</footer>
+	</blockquote>
+	{% endfor %}
 {% endif %}
 <script type = "text/javascript">
 $(document).ready (function() {

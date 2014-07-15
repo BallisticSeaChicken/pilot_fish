@@ -1,7 +1,7 @@
 from flask import Flask, flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from db_interface import Campaign, Contribution, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db
-from forms import SignUpForm, LogInForm
+from db_interface import Campaign, Contribution, Comment, all_campaigns, get_campaign_by_title, Person, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db
+from forms import SignUpForm, LogInForm, PostForm
 import datetime
 
 app = Flask(__name__)
@@ -103,23 +103,23 @@ def campaigns_list():
 @app.route("/campaigns/<name>", methods=["GET", "POST"])
 def campaign_info(name):
 	campaign = get_campaign_by_title(name)
+	postForm = PostForm()
 	if request.method == 'POST':
-		print "<---------------------posting"
-		if request.form['btn'] == 'Submit' and  int(request.form['amount']) > 0:
-			print "<--------------------- amount > 0"
-			contribution = Contribution(g.user.get_id(), request.form['campaignTitle'], request.form['amount'], datetime.datetime.now())
-			commit_to_db(contribution)
-			flash('Contributed %s points to %s!' % (request.form['amount'], name))
-		elif not int(request.form['amount']) > 0:
-			print "<--------------------- amount not > 0"
-			flash('Please contribute non-zero amount')
-		
-		return render_template('single_campaign.html', campaign = campaign, contribute_limit = 100 - g.user.get_monthly_contribution())
+		if request.form['btn'] == 'Contribute':
+			if int(request.form['amount']) > 0:
+				contribution = Contribution(g.user.get_id(), request.form['campaignTitle'], request.form['amount'], datetime.datetime.now())
+				commit_to_db(contribution)
+				flash('Contributed %s points to %s!' % (request.form['amount'], name))
+			else:
+				flash('Please contribute non-zero amount')
+		elif request.form['btn'] == 'Comment':
+			if postForm.validate_on_submit():
+				comment = Comment(campaign.CampaignTitle, g.user.get_id(), postForm.body.data)
+				commit_to_db(comment)
 	
-	if request.method == 'GET':
-		if g.user is not None:
-			if g.user.is_authenticated():
-				return render_template('single_campaign.html', campaign = campaign, contribute_limit = 100 - g.user.get_monthly_contribution())
+	if g.user is not None and g.user.is_authenticated():
+		return render_template('single_campaign.html', campaign = campaign, form = postForm, contribute_limit = 100 - g.user.get_monthly_contribution())
+	else:
 		return render_template('single_campaign.html', campaign = campaign)
 	
 @app.route("/persons/")

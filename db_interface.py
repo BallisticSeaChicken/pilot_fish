@@ -122,7 +122,12 @@ class Comment(Base):
 	Author = Column(String(20), ForeignKey('Persons.PersonID'), primary_key = True)
 	SubTime = Column(DateTime, primary_key = True)
 	Content = Column(Text)
-
+	
+	def __init__(self, ParentPost, Author, Content):
+		self.ParentPost = ParentPost
+		self.Author = Author
+		self.SubTime = datetime.datetime.now()
+		self.Content = Content
 
 #================functions================
 
@@ -173,7 +178,7 @@ def all_campaigns():
 	
 def get_campaign_by_title(name):
 	session = Session()
-	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions)).filter(Campaign.CampaignTitle==name).first()
+	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions), subqueryload(Campaign.Comments).joinedload(Comment.Commentator)).filter(Campaign.CampaignTitle==name).first()
 	session.close()
 	
 	return result

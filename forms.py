@@ -1,6 +1,7 @@
 from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField, PasswordField, validators, SelectField
 from wtforms.validators import Required, DataRequired
+from wtforms.widgets import TextArea
 
 class SignUpForm(Form):
 	PersonID = TextField('PersonID', validators = [Required()])
@@ -25,3 +26,7 @@ class SignUpForm(Form):
 class LogInForm(Form):
 	PersonID = TextField('PersonID', validators = [Required()])
 	Password = PasswordField('Password', validators = [Required()])
+
+class PostForm(Form):
+	body = TextField(u'Text', widget=TextArea(), validators = [Required()])
+	
