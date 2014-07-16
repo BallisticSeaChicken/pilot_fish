@@ -5,7 +5,7 @@ from db_model import Campaign, Contribution, Comment, Person
 from forms import SignUpForm, LogInForm, PostForm
 import datetime
 
-app = Flask(__name__)
+application = app = Flask(__name__)
 app.config.from_object('config')
 lm = LoginManager()
 lm.init_app(app)
@@ -136,4 +136,4 @@ def person_info(id):
 	return render_template('single_person.html', person = person, contributed_to = contributed_to)
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    application.run()
