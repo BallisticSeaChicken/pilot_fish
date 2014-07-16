@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, joinedload, subqueryload
 from db_model import Campaign, Contribution, Comment, Person, Venture
 import datetime
+import pyodbc
 
 engine=create_engine('mssql+pyodbc://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
 engine.connect()
