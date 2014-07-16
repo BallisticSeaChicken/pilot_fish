@@ -135,5 +135,5 @@ def person_info(id):
 	contributed_to = get_contribution(contributor = id)
 	return render_template('single_person.html', person = person, contributed_to = contributed_to)
 
-if __name__ == "__main__":
-    application.run(host='0.0.0.0', debug=True)
+if __name__ == '__main__':
+    application.run(debug=True)
