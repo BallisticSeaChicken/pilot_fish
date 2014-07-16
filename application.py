@@ -5,27 +5,27 @@ from db_model import Campaign, Contribution, Comment, Person
 from forms import SignUpForm, LogInForm, PostForm
 import datetime
 
-application = app = Flask(__name__)
-app.config.from_object('config')
+application = Flask(__name__)
+application.config.from_object('config')
 lm = LoginManager()
-lm.init_app(app)
+lm.init_app(application)
 lm.login_view = 'login'
 
-app.secret_key = 'For mother Russia'
+application.secret_key = 'For mother Russia'
 
 @lm.user_loader
 def load_user(id):
     return get_person_by_id(int(id))
 
-@app.before_request
+@application.before_request
 def before_request():
     g.user = current_user	
 	
-@app.route("/")
+@application.route("/")
 def redirect_home():
     return redirect(url_for('home'))
 
-@app.route("/signup", methods=['GET','POST'])
+@application.route("/signup", methods=['GET','POST'])
 def sign_up():
 	form = SignUpForm()
 	if request.method == 'POST':
@@ -60,7 +60,7 @@ def sign_up():
 		title = 'Sign Up',
 		form = form)
 		
-@app.route("/login", methods=['GET','POST'])
+@application.route("/login", methods=['GET','POST'])
 def log_in():
 	if g.user is not None:
 		if g.user.is_authenticated():
@@ -82,26 +82,26 @@ def log_in():
 		title = 'Log In',
 		form = form)
 		
-@app.route('/logout')
+@application.route('/logout')
 def logout():
 	logout_user()
 	return redirect(url_for('home'))
 	
-@app.route("/ventures/")
+@application.route("/ventures/")
 def ventures_list():
 	ventures = get_ventures()
 	return render_template('all_ventures.html', ventures = ventures)
 	
-@app.route("/home", methods=["GET", "POST"])
+@application.route("/home", methods=["GET", "POST"])
 def home():
 	return render_template('home.html')
 	
-@app.route("/campaigns/")
+@application.route("/campaigns/")
 def campaigns_list():
 	campaigns_list = all_campaigns()
 	return render_template('campaigns_all.html', campaigns = campaigns_list)
 
-@app.route("/campaigns/<name>", methods=["GET", "POST"])
+@application.route("/campaigns/<name>", methods=["GET", "POST"])
 def campaign_info(name):
 	campaign = get_campaign_by_title(name)
 	postForm = PostForm()
@@ -124,16 +124,16 @@ def campaign_info(name):
 	else:
 		return render_template('single_campaign.html', campaign = campaign)
 	
-@app.route("/persons/")
+@application.route("/persons/")
 def persons_list():
 	persons_list = get_all_persons()
 	return render_template('persons_all.html', persons = persons_list)
 
-@app.route("/persons/<int:id>")	
+@application.route("/persons/<int:id>")	
 def person_info(id):
 	person = get_person_by_id(id)
 	contributed_to = get_contribution(contributor = id)
 	return render_template('single_person.html', person = person, contributed_to = contributed_to)
 
 if __name__ == "__main__":
-    application.run(debug=True)
+    applicationlication.run(debug=True)
