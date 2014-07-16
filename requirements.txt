@@ -2,5 +2,4 @@ Flask == 0.9
 Sqlalchemy == 0.9
 Flask-WTF == 0.9.5
 Flask-Login == 0.2.11
---allow-all-external pyodbc
-pyodbc == 3.0.7
+--allow-all-external pyodbc == 3.0.7
