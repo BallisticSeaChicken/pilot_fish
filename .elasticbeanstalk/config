@@ -1,0 +1,13 @@
+[global]
+ApplicationName=pf
+DevToolsEndpoint=git.elasticbeanstalk.us-west-2.amazonaws.com
+EnvironmentName=pf-env
+EnvironmentTier=WebServer::Standard::1.0
+EnvironmentType=LoadBalanced
+InstanceProfileName=aws-elasticbeanstalk-ec2-role
+OptionSettingFile=C:\Users\Tomy Tang\Desktop\Pilot Fish\pilotfish\pilot_fish\.elasticbeanstalk\optionsettings.pf-env
+RdsEnabled=No
+Region=us-west-2
+ServiceEndpoint=https://elasticbeanstalk.us-west-2.amazonaws.com
+SolutionStack=64bit Amazon Linux 2014.03 v1.0.4 running Python 2.7
+
