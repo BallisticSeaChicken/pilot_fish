@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, joinedload, subqueryload
 from db_model import Campaign, Contribution, Comment, Person, Venture
 import datetime
 
-engine=create_engine('mssql://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
+engine=create_engine('mssql+pymssql://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
 engine.connect()
 Session = sessionmaker(bind = engine)
 
