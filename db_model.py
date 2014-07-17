@@ -76,7 +76,7 @@ class Person(Base):
 class Venture(Base):
 	__tablename__ = 'Ventures'
 	Title = Column(String(50), primary_key = True)
-	Description = Column(String(300))
+	ShortDesc = Column(String(300))
 	Backers = Column(Integer)
 	CreatorID = Column(Integer, ForeignKey('Persons.PersonID'))
 	
@@ -115,6 +115,7 @@ class Contribution(Base):
 		
 class Comment(Base):
 	__tablename__ = 'Comments'
+	Key = Column(Integer, primary_key = True)
 	ParentPost = Column(String(50), ForeignKey('Campaigns.CampaignTitle'), primary_key = True)
 	Author = Column(String(20), ForeignKey('Persons.PersonID'), primary_key = True)
 	SubTime = Column(DateTime, primary_key = True)

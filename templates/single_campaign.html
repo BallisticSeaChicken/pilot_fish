@@ -69,12 +69,14 @@
 	</form>
 </p>
 {% endif %}
-{% if campaign.Comments %}
-	{% for instance in campaign.Comments %}
-	<blockquote>
-		<p>{{instance.Content}}</p>
-		<footer>{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}} on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}</footer>
-	</blockquote>
+{% if comments %}
+	{% for instance in comments %}
+	<div class="media">
+		<div class="media-body">
+			<h4 class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</h4> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
+			<BlockQuote>{{instance.Content}}</BlockQuote>
+		</div>
+    </div>
 	{% endfor %}
 {% endif %}
 <script type = "text/javascript">

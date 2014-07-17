@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, func
-from sqlalchemy.orm import sessionmaker, joinedload, subqueryload
+from sqlalchemy.orm import sessionmaker, joinedload, subqueryload, aliased
 from db_model import Campaign, Contribution, Comment, Person, Venture
 import datetime
 
@@ -54,7 +54,20 @@ def all_campaigns():
 	
 def get_campaign_by_title(name):
 	session = Session()
-	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions), subqueryload(Campaign.Comments).joinedload(Comment.Commentator)).filter(Campaign.CampaignTitle==name).first()
+	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions)).first()
+	session.close()
+	
+	return result
+	
+def get_comments(campaign, page = 1):
+	session = Session()
+	
+	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key).subquery()
+	
+	comalias = aliased(Comment, stmt)
+	
+	result = session.query(comalias).options(joinedload(comalias.Commentator)).all()
+	
 	session.close()
 	
 	return result
