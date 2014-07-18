@@ -106,6 +106,7 @@ def campaigns_list():
 @application.route("/campaigns/<name>/<int:page>", methods=["GET", "POST"])
 def campaign_info(name, page = 1):
 	campaign = get_campaign_by_title(name)
+	comments, previous_exists = get_comments(campaign = name, page = page)
 	postForm = PostForm()
 	if request.method == 'POST':
 		if request.form['btn'] == 'Contribute':
@@ -122,9 +123,9 @@ def campaign_info(name, page = 1):
 			return redirect(url_for('campaign_info', name = name))
 	
 	if g.user is not None and g.user.is_authenticated():
-		return render_template('single_campaign.html', campaign = campaign, comments = get_comments(campaign = name, page = page), page = page, form = postForm, contribute_limit = 100 - g.user.get_monthly_contribution())
+		return render_template('single_campaign.html', campaign = campaign, comments = comments, page = page, previous_exists = previous_exists, form = postForm, contribute_limit = 100 - g.user.get_monthly_contribution())
 	else:
-		return render_template('single_campaign.html', campaign = campaign, comments = get_comments(campaign = name, page = page), page = page)
+		return render_template('single_campaign.html', campaign = campaign, comments = comments, page = page, previous_exists = previous_exists)
 	
 @application.route("/persons/")
 def persons_list():

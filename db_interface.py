@@ -63,21 +63,22 @@ def get_comments(campaign, page):
 	session = Session()
 	
 	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).limit(5 * (page-1)).subquery()
-	
 	comalias = aliased(Comment, stmt)
-	
 	last_key = session.query(comalias).order_by(comalias.Key).first()
+
+	first_key = session.query(Comment).order_by(Comment.Key).first()
 	
 	result = session.query(Comment).filter(Comment.ParentPost == campaign)
-	
 	if last_key:
 		result = result.filter(Comment.Key < last_key.Key)
-	
 	result = result.options(joinedload(Comment.Commentator)).order_by(Comment.Key.desc()).limit(5).all()
+	
+	print "<----------------------------------", result[-1].Key, first_key.Key
+	previous_exist = False if (first_key.Key == result[-1].Key) else True
 	
 	session.close()
 	
-	return result
+	return result, previous_exist
 
 def get_all_persons():
 	session = Session()
