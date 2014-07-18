@@ -59,14 +59,21 @@ def get_campaign_by_title(name):
 	
 	return result
 	
-def get_comments(campaign, page = 1):
+def get_comments(campaign, page):
 	session = Session()
 	
-	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key).subquery()
+	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).limit(5 * (page-1)).subquery()
 	
 	comalias = aliased(Comment, stmt)
 	
-	result = session.query(comalias).options(joinedload(comalias.Commentator)).all()
+	last_key = session.query(comalias).order_by(comalias.Key).first()
+	
+	result = session.query(Comment).filter(Comment.ParentPost == campaign)
+	
+	if last_key:
+		result = result.filter(Comment.Key < last_key.Key)
+	
+	result = result.options(joinedload(Comment.Commentator)).order_by(Comment.Key.desc()).limit(5).all()
 	
 	session.close()
 	

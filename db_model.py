@@ -126,5 +126,3 @@ class Comment(Base):
 		self.Author = Author
 		self.SubTime = datetime.datetime.now()
 		self.Content = Content
-
-#================functions================
