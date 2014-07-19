@@ -70,20 +70,29 @@
 </p>
 {% endif %}
 {% if comments %}
-	{% for instance in comments %}
-	<div class="media">
+<ul class="media-list">
+{% for instance in comments %}
+	<li class = "media">
 		<div class="media-body">
-			<h4 class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</h4> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
-			<BlockQuote>{{instance.Content}}</BlockQuote>
+			<Strong class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</Strong> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
+			<p>{{instance.Content}}</p>
 		</div>
-    </div>
-	{% endfor %}
+    </li>
+{% endfor %}
+</ul>
 {% endif %}
 
-{% if page > 1 %}<a href="{{ url_for('campaign_info', name = campaign.CampaignTitle, page = page - 1) }}"><span class = "glyphicon glyphicon-chevron-left">Newer posts</span></a>
-{% else %}<span class = "glyphicon glyphicon-chevron-left">Newer posts{% endif %} | 
-{% if previous_exists %}<a href="{{ url_for('campaign_info', name = campaign.CampaignTitle, page = page + 1) }}">Older posts<span class = "glyphicon glyphicon-chevron-right"></span></a>
-{% else %}Older posts<span class = "glyphicon glyphicon-chevron-right">{% endif %}
+<Strong>{% if page > 1 %}
+	<a href="{{ url_for('campaign_info', name = campaign.CampaignTitle, page = page - 1) }}"><span class = "glyphicon glyphicon-chevron-left"></span>Newer posts</a>
+{% else %}
+	<span class = "glyphicon glyphicon-chevron-left"></span>Newer posts
+{% endif %}<b>|||</b>
+{% if previous_exists %}
+	<a href="{{ url_for('campaign_info', name = campaign.CampaignTitle, page = page + 1) }}">Older posts<span class = "glyphicon glyphicon-chevron-right"></span></a>
+{% else %}
+	Older posts<span class = "glyphicon glyphicon-chevron-right"></span>
+{% endif %}
+</Strong>
 
 <script type = "text/javascript">
 $(document).ready (function() {

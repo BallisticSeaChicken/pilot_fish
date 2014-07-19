@@ -54,27 +54,26 @@ def all_campaigns():
 	
 def get_campaign_by_title(name):
 	session = Session()
-	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions)).first()
+	result = session.query(Campaign).options(joinedload(Campaign.Person), joinedload(Campaign.IndividualContributions)).filter(Campaign.CampaignTitle == name).first()
 	session.close()
 	
 	return result
 	
 def get_comments(campaign, page):
 	session = Session()
+	first_key = session.query(Comment).order_by(Comment.Key).filter(Comment.ParentPost == campaign).first()
 	
-	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).limit(5 * (page-1)).subquery()
+	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).limit(5 * page).subquery()
 	comalias = aliased(Comment, stmt)
-	last_key = session.query(comalias).order_by(comalias.Key).first()
-
-	first_key = session.query(Comment).order_by(Comment.Key).first()
 	
-	result = session.query(Comment).filter(Comment.ParentPost == campaign)
-	if last_key:
-		result = result.filter(Comment.Key < last_key.Key)
-	result = result.options(joinedload(Comment.Commentator)).order_by(Comment.Key.desc()).limit(5).all()
-	
-	print "<----------------------------------", result[-1].Key, first_key.Key
-	previous_exist = False if (first_key.Key == result[-1].Key) else True
+	temp = session.query(comalias).options(joinedload(comalias.Commentator)).order_by(comalias.Key).limit(5).all()
+	if temp:
+		result = list(reversed(temp))
+		print first_key.Key, result[-1].Key, "<-----------------------------"
+		previous_exist = False if first_key.Key == result[-1].Key else True
+	else:
+		result = None
+		previous_exist = False
 	
 	session.close()
 	

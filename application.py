@@ -106,6 +106,7 @@ def campaigns_list():
 @application.route("/campaigns/<name>/<int:page>", methods=["GET", "POST"])
 def campaign_info(name, page = 1):
 	campaign = get_campaign_by_title(name)
+	print "<-----------------------------", campaign.CampaignTitle, name
 	comments, previous_exists = get_comments(campaign = name, page = page)
 	postForm = PostForm()
 	if request.method == 'POST':
