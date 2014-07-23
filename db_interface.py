@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, joinedload, subqueryload, aliased
-from db_model import Campaign, Contribution, Comment, Person, Venture
+from db_model import Campaign, Contribution, Comment, Person, Venture, Challenge, Discussion
 import datetime
 
 engine=create_engine('mssql://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
@@ -97,3 +97,11 @@ def get_person_by_id(id, password = None):
 	session.close()
 	
 	return person
+	
+def get_challenges():
+	session = Session()
+	challenges = session.query(Challenge).options(joinedload(Challenge.Discussions), subqueryload(Challenge.Initiator)).order_by(Challenge.DateMade).all()
+	
+	session.close()
+	
+	return challenges

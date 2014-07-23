@@ -7,7 +7,7 @@ Base = declarative_base()
 
 class Person(Base):
 	__tablename__ = 'Persons'
-	PersonID = Column(Integer, primary_key = True, autoincrement=False)
+	PersonID = Column(String(50), primary_key = True)
 	FirstName = Column(String(50))
 	LastName = Column(String(50))
 	Password = Column(String(20))
@@ -32,6 +32,8 @@ class Person(Base):
 	
 	Comments = relationship('Comment', primaryjoin = 'Comment.Author == Person.PersonID', backref='Commentator')
 	
+	ChallengesCreated = relationship('Challenge', primaryjoin = 'Challenge.Creator == Person.PersonID', backref = 'Initiator')
+	
 	def get_monthly_contribution(self):
 		sum = int()
 		today = datetime.datetime.now()
@@ -40,7 +42,7 @@ class Person(Base):
 				sum += c.Contribution
 		return sum
 	
-	def __init__(self, PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skill1, Skill2, Skill3, Interest1, Interest2):
+	def __init__(self, PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skills, Interest1, Interest2):
 		self.PersonID = PersonID
 		self.FirstName = FirstName
 		self.LastName = LastName
@@ -51,9 +53,14 @@ class Person(Base):
 		self.PhoneNumber = PhoneNumber
 		self.Email = Email
 		
-		self.Skill1 = Skill1
-		self.Skill2 = Skill2
-		self.Skill3 = Skill3
+		if len(Skills) == 1:
+			self.Skill1 = Skills[0]
+		
+		if len(Skills) == 2:
+			self.Skill2 = Skills[1] 
+			
+		if len(Skills) == 3:
+			self.Skill2 = Skills[2]
 		
 		self.Interest1 = Interest1
 		self.Interest2 = Interest2
@@ -73,19 +80,45 @@ class Person(Base):
 	def __repr__(self):
 		return self.FirstName
 
+class Challenge(Base):
+	__tablename__ = "Challenges"
+	ChallengeName = Column(String(50), primary_key = True)
+	Creator = Column(String, ForeignKey('Persons.PersonID'))
+	DateMade = Column(Date)
+	
+	Discussions = relationship('Discussion', primaryjoin = "Challenge.ChallengeName == Discussion.ChallengeName", backref = "RespondingTo")
+	
+	def getNumDiscussions(self):
+		return len(self.Discussions)
+	
+class Discussion(Base):
+	__tablename__ = "Discussions"
+	ChallengeName = Column(String(250), ForeignKey('Challenges.ChallengeName'), primary_key = True)
+	Topic = Column(String(250), primary_key = True)
+	Creator = Column(String(50), ForeignKey('Persons.PersonID'), primary_key = True, autoincrement = False)
+	DateCreated = Column(DateTime)
+	Description = Column(Text)
+	
+	def __init__(self, ChallengeName, Topic, Creator, DateCreated, Description):
+		self.ChallengeName = ChallengeName
+		self.Topic = Topic
+		self.Creator = Creator
+		self.DateCreated = DateCreated
+		self.Description = Description
+	
 class Venture(Base):
 	__tablename__ = 'Ventures'
 	Title = Column(String(50), primary_key = True)
 	ShortDesc = Column(String(300))
 	Backers = Column(Integer)
-	CreatorID = Column(Integer, ForeignKey('Persons.PersonID'))
+	CreatorID = Column(String(50), ForeignKey('Persons.PersonID'))
 	
 class Campaign(Base):
 	__tablename__ = 'Campaigns'
 	CampaignTitle = Column(String(50), primary_key = True)
 	Description = Column(String(300))
 	DatePosted = Column(Date)
-	Creator = Column(Integer, ForeignKey('Persons.PersonID'))
+	Creator = Column(String(50), ForeignKey('Persons.PersonID'))
 	
 	IndividualContributions = relationship("Contribution", primaryjoin= "Contribution.CampaignName == Campaign.CampaignTitle", backref="ContributionTarget")
 	
@@ -102,7 +135,7 @@ class Campaign(Base):
 	
 class Contribution(Base):
 	__tablename__ = 'Contributions'
-	ContributorID = Column(Integer, ForeignKey('Persons.PersonID'), primary_key = True)
+	ContributorID = Column(String(50), ForeignKey('Persons.PersonID'), primary_key = True)
 	CampaignName = Column(String(20), ForeignKey('Campaigns.CampaignTitle'), primary_key = True)
 	Contribution = Column(Integer)
 	SubTime = Column(DateTime, primary_key = True)

@@ -73,6 +73,9 @@
 <ul class="media-list">
 {% for instance in comments %}
 	<li class = "media">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=96" alt="Generic placeholder image" height = "64" width = "64">
+        </a>
 		<div class="media-body">
 			<Strong class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</Strong> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
 			<p>{{instance.Content}}</p>

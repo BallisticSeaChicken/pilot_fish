@@ -1,9 +1,9 @@
 import flask
 from flask import flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments
-from db_model import Campaign, Contribution, Comment, Person
-from forms import SignUpForm, LogInForm, PostForm
+from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges
+from db_model import Campaign, Contribution, Comment, Person, Discussion, Challenge
+from forms import SignUpForm, LogInForm, PostForm, DiscussionForm
 import datetime
 
 application = flask.Flask(__name__)
@@ -16,7 +16,7 @@ application.secret_key = 'For mother Russia'
 
 @lm.user_loader
 def load_user(id):
-    return get_person_by_id(int(id))
+    return get_person_by_id(id)
 
 @application.before_request
 def before_request():
@@ -25,15 +25,41 @@ def before_request():
 @application.route("/")
 def redirect_home():
     return redirect(url_for('home'))
+	
+@application.route("/discussions", methods=['GET', 'POST'])
+def discussions_all():
+	form = DiscussionForm()
+	
+	if request.method=='POST':
+		if form.validate_on_submit():
+			ChallengeName = request.form['ChallengeName']
+			Topic = form.Topic.data
+			Description = form.Description.data
+			
+			Creator = g.user.get_id()
+			DateCreated = datetime.datetime.now()
+			
+			discussion = Discussion(ChallengeName, Topic, Creator, DateCreated, Description)
+			
+			commit_to_db(discussion)
+			
+			return redirect(url_for('discussions_all'))
+		else:
+			flash("Could not start your new discussion")
+			return redirect(url_for('discussions_all'))
+			
+	if request.method=='GET':
+		return render_template('discussions_all.html', challenges = get_challenges(), form = form)
 
 @application.route("/signup", methods=['GET','POST'])
 def sign_up():
 	form = SignUpForm()
 	if request.method == 'POST':
-		if form.validate_on_submit():
+		if form.validate_on_submit() and 1 <= len(form.Skills.data) <= 3:
 			PersonID = form.PersonID.data
 			FirstName = form.FirstName.data
 			LastName = form.LastName.data
+			
 			Password = form.Password.data
 			Department = form.Department.data
 			Position = form.Position.data
@@ -41,21 +67,22 @@ def sign_up():
 			PhoneNumber = form.PhoneNumber.data
 			Email = form.Email.data
 			
-			Skill1 = form.Skill1.data
-			Skill2 = form.Skill2.data
-			Skill3 = form.Skill3.data
+			Skills = form.Skills.data
 			
 			Interest1 = form.Interest1.data
 			Interest2 = form.Interest2.data
 			
-			user = Person(PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skill1, Skill2, Skill3, Interest1, Interest2)
-			
+			user = Person(PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skills, Interest1, Interest2)
 			user = commit_to_db(user)
 			
-			registered_user = get_person_by_id(form.PersonID.data)
+			registered_user = get_person_by_id(PersonID)
 			login_user(registered_user)
+			
 			flash('Signed in successfully')
 			return redirect(url_for('person_info', id = g.user.get_id()))
+		else:
+			flash('Failed to sign up for Pilot Fish Innovation Platform')
+			return redirect(url_for('sign_up'))
 	
 	return render_template('sign_up.html', 
 		title = 'Sign Up',
@@ -133,7 +160,7 @@ def persons_list():
 	persons_list = get_all_persons()
 	return render_template('persons_all.html', persons = persons_list)
 
-@application.route("/persons/<int:id>")	
+@application.route("/persons/<id>")	
 def person_info(id):
 	person = get_person_by_id(id)
 	contributed_to = get_contribution(contributor = id)
@@ -141,3 +168,12 @@ def person_info(id):
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0',debug=True)
+	
+#<=====================================Utilities==================================>
+
+def usernameIsAvailable(username):
+	Persons = get_all_persons()
+	unavailableUsernames = [p.Username for p in Persons]
+	
+	return not (username in unavailableUsernames)
+		
