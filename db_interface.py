@@ -59,6 +59,17 @@ def get_campaign_by_title(name):
 	
 	return result
 	
+		#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+def get_venture_by_title(name):
+	session = Session()
+	result = session.query(Venture).options(joinedload(Venture.Creator)).first()
+	session.close()
+	
+	return result
+	
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	
+	
 def get_comments(campaign, page):
 	session = Session()
 	first_key = session.query(Comment).order_by(Comment.Key).filter(Comment.ParentPost == campaign).first()

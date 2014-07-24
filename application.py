@@ -120,6 +120,17 @@ def ventures_list():
 	ventures = get_ventures()
 	return render_template('all_ventures.html', ventures = ventures)
 	
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+@application.route("/ventures/<name>", methods=["GET", "POST"])
+def venture_info(name, page = 1):
+	venture = get_venture_by_title(name)
+	print "<-----------------------------", type(venture), name
+	postForm = PostForm()
+	return render_template('single_venture.html', venture=venture)
+
+	
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	
 @application.route("/home", methods=["GET", "POST"])
 def home():
 	return render_template('home.html')
