@@ -23,16 +23,14 @@
 		  {% endif %}
 		{% endwith %}
 		<div class="navbar navbar-default navbar-inverse" role="navigation" id = "navBar">
-			<div class = "container container-fluid">
-				<div>
-					<a class="navbar-brand" href="/home">Pilot Fish</a>
-					<ul class="nav navbar-nav">
-						<li><a href="/campaigns">Campaigns</a></li>
-						<li><a href="/persons">People</a></li>
-						<li><a href="/discussions">Discussions</a></li>
-						<li><a href="/ventures">Ventures</a></li>
-					</ul>
-				</div>
+			<div class = "container">
+				<a class="navbar-brand" href="/home"><img src="{{ url_for('static', filename='tool_bar_logo.ico') }} " height = "64" width = "64"></a>
+				<ul class="nav navbar-nav">
+					<li><a href="/campaigns">Campaigns</a></li>
+					<li><a href="/persons">People</a></li>
+					<li><a href="/discussions">Discussions</a></li>
+					<li><a href="/ventures">Ventures</a></li>
+				</ul>
 				<div class = "header">
 					<ul class="nav navbar-nav navbar-right">
 					{% if not g.user.is_authenticated() %}
@@ -46,7 +44,7 @@
 				</div>
 			</div>
 		</div>
-		<div class = "container container-fluid">
+		<div class = "container">
 			{% block content %}{% endblock %}
 		</div>
 	</body>
