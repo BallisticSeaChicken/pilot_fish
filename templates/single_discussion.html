@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header"><h4>{{discussion.Topic}}</h4></div>
+<div class = "row">
+	<div class = "col-md-4">
+		<h4>Created on:</h4> {{discussion.DateCreated}}<br>
+		<h4>By:</h4><a href="{{url_for('person_info', id = discussion.Creator.PersonID)}}">{{discussion.Creator.FirstName}} {{discussion.Creator.LastName}}</a><br>
+		<strong>{% if comments is not none %}{{comments|length}}{% else %} 0 {% endif %} comments</strong>
+		<h4>Created on:</h4> {{discussion.DateCreated}}<br>
+		<h4>Description:</h4> {{discussion.Description}}<br>
+		{% if g.user.is_authenticated() %}
+		<form method="post" id = "comment_submitter">
+		   {{form.hidden_tag()}}
+		   <dl>
+			  <dt>Leave a comment:
+			  <dd>{{ form.body(cols="70", rows="5") }}
+		   </dl>
+		   <p>
+			  <button type="submit" name = "btn" value = "Comment" class = "btn btn-warning">Submit Comment</button>
+		</form>
+		{% endif %}
+	</div>
+	
+	<div class = "col-md-6">
+		<div class = "pull-right">
+			{% if comments %}
+			<ul class="media-list">
+			{% for instance in comments %}
+				<li class = "media">
+					<a class="pull-left" href="#">
+						<img class="media-object" src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=96" alt="Generic placeholder image" height = "64" width = "64">
+					</a>
+					<div class="media-body">
+						<Strong class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</Strong> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
+						<p>{{instance.Content}}</p>
+					</div>
+				</li>
+			{% endfor %}
+			</ul>
+			{% endif %}
+
+			<strong>{% if page > 1 %}
+				<a href="{{ url_for('campaign_info', name = discussion.Topic, page = page - 1) }}"><span class = "glyphicon glyphicon-chevron-left"></span>Newer posts</a>
+			{% else %}
+				<span class = "glyphicon glyphicon-chevron-left"></span>Newer posts
+			{% endif %}<b>|||</b>
+			{% if previous_exists %}
+				<a href="{{ url_for('campaign_info', name = discussion.Topic, page = page + 1) }}">Older posts<span class = "glyphicon glyphicon-chevron-right"></span></a>
+			{% else %}
+				Older posts<span class = "glyphicon glyphicon-chevron-right"></span>
+			{% endif %}
+			</strong>
+		</div>
+	</div>
+</div>
+
+<script type = "text/javascript">
+$(document).ready (function() {
+	$( "#ventureDialog" ).dialog({
+		width: 'auto',
+		autoOpen: false,
+		modal: true
+    });
+
+    $( "#openVenture" ).button().click(function() {
+		$( "#ventureDialog" ).dialog( "open" );
+    });
+	
+	{% if g.user.is_authenticated() %}
+	
+	$( "#contributeDialog" ).dialog({
+		width: 'auto',
+		autoOpen: false,
+		modal: true
+    });
+	
+	$( "#openContribute" ).button().click(function() {
+		
+		$( "#contributeDialog" ).dialog( "open" );
+    });
+	
+	$( "#slider" ).slider({
+		value:0,
+		min: 0,
+		max: {{contribute_limit}},
+		step: 5,
+		slide: function( event, ui ) {
+        $( "#amount" ).val( ui.value );
+      }
+    });
+	
+    $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
+	
+	{% endif %}
+});
+</script>
+{% endblock %}

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, joinedload, subqueryload, aliased
-from db_model import Campaign, Contribution, Comment, Person, Venture, Challenge, Discussion
+from db_model import Campaign, Contribution, Comment, Person, Venture, Challenge, Discussion, DiscussionEntry
 import datetime
 
 engine=create_engine('mssql://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
@@ -14,6 +14,13 @@ def commit_to_db(target):
 	session.commit()
 	
 	session.close()
+	
+def get_discussion_by_topic(topic):
+	session = Session()
+	discussion = session.query(Discussion).options(joinedload(Discussion.Creator)).filter(Discussion.Topic==topic).first()
+	session.close()
+	
+	return discussion
 	
 def get_ventures(title = None, creatorID = None):
 	session = Session()
@@ -79,6 +86,26 @@ def get_comments(campaign, page):
 	
 	return result, previous_exist
 
+def get_discussion_entries(topic, page):
+	session = Session()
+	first_key = session.query(DiscussionEntry).order_by(DiscussionEntry.Key).filter(DiscussionEntry.ParentPost == topic).first()
+	
+	stmt = session.query(DiscussionEntry).filter(DiscussionEntry.ParentPost == topic).order_by(DiscussionEntry.Key.desc()).limit(20 * page).subquery()
+	entalias = aliased(DiscussionEntry, stmt)
+	
+	temp = session.query(entalias).options(joinedload(entalias.Commentator)).order_by(entalias.Key).limit(20).all()
+	if temp:
+		result = list(reversed(temp))
+		print first_key.Key, result[-1].Key, "<-----------------------------"
+		previous_exist = False if first_key.Key == result[-1].Key else True
+	else:
+		result = None
+		previous_exist = False
+	
+	session.close()
+	
+	return result, previous_exist
+	
 def get_all_persons():
 	session = Session()
 	persons = session.query(Person).all()

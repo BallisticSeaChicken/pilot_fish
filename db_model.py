@@ -34,6 +34,10 @@ class Person(Base):
 	
 	ChallengesCreated = relationship('Challenge', primaryjoin = 'Challenge.Creator == Person.PersonID', backref = 'Initiator')
 	
+	Discussions = relationship('Discussion', primaryjoin = 'Discussion.CreatorID == Person.PersonID', backref = 'Creator')
+	
+	DiscussionEntries = relationship('DiscussionEntry', primaryjoin = 'DiscussionEntry.Author == Person.PersonID', backref='Commentator')
+	
 	def get_monthly_contribution(self):
 		sum = int()
 		today = datetime.datetime.now()
@@ -95,9 +99,11 @@ class Discussion(Base):
 	__tablename__ = "Discussions"
 	ChallengeName = Column(String(250), ForeignKey('Challenges.ChallengeName'), primary_key = True)
 	Topic = Column(String(250), primary_key = True)
-	Creator = Column(String(50), ForeignKey('Persons.PersonID'), primary_key = True, autoincrement = False)
+	CreatorID = Column(String(50), ForeignKey('Persons.PersonID'), primary_key = True, autoincrement = False)
 	DateCreated = Column(DateTime)
 	Description = Column(Text)
+	
+	Entries = relationship('DiscussionEntry', primaryjoin = 'DiscussionEntry.ParentPost == Discussion.Topic', backref='Discussion')
 	
 	def __init__(self, ChallengeName, Topic, Creator, DateCreated, Description):
 		self.ChallengeName = ChallengeName
@@ -105,6 +111,20 @@ class Discussion(Base):
 		self.Creator = Creator
 		self.DateCreated = DateCreated
 		self.Description = Description
+		
+class DiscussionEntry(Base):
+	__tablename__ = 'DiscussionEntries'
+	Key = Column(Integer, primary_key = True)
+	ParentPost = Column(String(50), ForeignKey('Discussions.Topic'), primary_key = True)
+	Author = Column(String(20), ForeignKey('Persons.PersonID'), primary_key = True)
+	SubTime = Column(DateTime, primary_key = True)
+	Content = Column(Text)
+	
+	def __init__(self, Topic, Author, Content):
+		self.ParentPost = Topic
+		self.Author = Author
+		self.SubTime = datetime.datetime.now()
+		self.Content = Content
 	
 class Venture(Base):
 	__tablename__ = 'Ventures'

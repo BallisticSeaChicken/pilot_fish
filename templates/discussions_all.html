@@ -22,7 +22,7 @@
 				<div class = "col-md-8">
 					<ul>
 					{% for discussion in instance.Discussions %}
-						<li>{{discussion.Topic}}</li>
+						<li><a href="{{url_for('discuss', topic = discussion.Topic)}}">{{discussion.Topic}}</a></li>
 					{% endfor %}
 					</ul>
 				</div>

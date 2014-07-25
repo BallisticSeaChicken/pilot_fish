@@ -1,8 +1,8 @@
 import flask
 from flask import flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges
-from db_model import Campaign, Contribution, Comment, Person, Discussion, Challenge
+from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges, get_discussion_by_topic, get_discussion_entries
+from db_model import Campaign, Contribution, Comment, Person, Discussion, Challenge, DiscussionEntry
 from forms import SignUpForm, LogInForm, PostForm, DiscussionForm
 import datetime
 
@@ -25,6 +25,21 @@ def before_request():
 @application.route("/")
 def redirect_home():
     return redirect(url_for('home'))
+	
+@application.route("/discussions/<topic>", methods=['GET', 'POST'])
+@application.route("/campaigns/<name>/<int:page>", methods=["GET", "POST"])
+def discuss(topic, page = 1):
+	discussion = get_discussion_by_topic(topic)
+	comments, previous_exists = get_discussion_entries(topic = topic, page = page)
+	postForm = PostForm()
+	if request.method == 'POST':
+		if request.form['btn'] == 'Comment':
+			if postForm.validate_on_submit():
+				entry = DiscussionEntry(discussion.Topic, g.user.get_id(), postForm.body.data)
+				commit_to_db(entry)
+			return redirect(url_for('discuss', topic = topic))
+	if request.method=='GET':
+		return render_template('single_discussion.html', discussion = discussion, comments = comments, page = page, previous_exists = previous_exists, form = postForm)
 	
 @application.route("/discussions", methods=['GET', 'POST'])
 def discussions_all():
