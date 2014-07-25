@@ -6,55 +6,84 @@
 	<h4>Created on:</h4> {{campaign.DatePosted}}<br>
 	<h4>By:</h4><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
 	<h4>Contributions:</h4><b>{{campaign.getContributionSum()}}</b> points from <b>{{campaign.getNumBackers()}}</b> backers<br>
-	<h4>Created on:</h4> {{campaign.DatePosted}}<br>
 	<h4>Description:</h4> {{campaign.Description}}<br>
 </div>
 <hr>
-<div id = "ventureDialog" title = "Turn {{campaign.CampaignTitle}} into a venture">
-	<form method = "post" >
-		<p>
-			Venture Title:<input type = "text" name = "newVentureTitle" value = "{{campaign.CampaignTitle}}" readonly />
-		</p>
-		<p>
-			Short Description:<input type = "text" name = "newVentureShort" value = "{{campaign.Description}}" readonly />
-		</p>
-		<p>
-			Created by:<input type = "text" name = "newVentureCreator" value = "{{campaign.Person.FirstName}} {{campaign.Person.LastName}}" readonly />
-		</p>
-		<p>
-			Backed by:<input type = "text" name = "newVentureBackers" value = "{{campaign.getNumBackers()}}" readonly />
-		</P>
-		<p>
-			Skills:<input type = "text" name = "newSkill1" id = "newSkill1" /> <input type = "text" name = "newSkill2" id = "newSkill2" /> <input type = "text" name = "newSkill3" id = "newSkill3" />
-		</p>
-		<p>
-			Describe this venture:<br>
-			<textarea>
-			</textarea>
-		</p>
-	</form>
-</div>
+
 {% if g.user.is_authenticated() %}
-<div id = "contributeDialog" title = "Contribute to {{campaign.CampaignTitle}}!">
-	<form action="{{url_for('campaign_info', name = campaign.CampaignTitle)}}" method = "post" >
-		<p>
-			Campaign Title: <input type = "text" name = "campaignTitle" value = "{{campaign.CampaignTitle}}" readonly style="border:0; font-weight:bold;"/>
-		</p>
-		<p>
-		  <label for="amount">Contribution amount (5 point increments):</label>
-		  <input type="text" name="amount" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;" />
-		</p>
-		<p>
-			<div id="slider"></div>
-		</p>
-		<button type="submit" name = "btn" value="Contribute">Contribute</button>
-	</form>
-</div>
 {% if g.user.get_id() == campaign.Person.PersonID %}
 	{% if campaign.getContributionSum() >= 250 %}
+	
+	<div class="modal fade" id="ventureModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">Turn {{campaign.CampaignTitle}} into a venture</h4>
+				</div>
+				<form method = "post" >
+					<div class="modal-body">
+						<p>
+							Venture Title:<input type = "text" name = "newVentureTitle" value = "{{campaign.CampaignTitle}}" readonly />
+						</p>
+						<p>
+							Short Description:<input type = "text" name = "newVentureShort" value = "{{campaign.Description}}" readonly />
+						</p>
+						<p>
+							Created by:<input type = "text" name = "newVentureCreator" value = "{{campaign.Person.FirstName}} {{campaign.Person.LastName}}" readonly />
+						</p>
+						<p>
+							Backed by:<input type = "text" name = "newVentureBackers" value = "{{campaign.getNumBackers()}}" readonly />
+						</P>
+						<p>
+							Skills:<input type = "text" name = "newSkill1" id = "newSkill1" /> <input type = "text" name = "newSkill2" id = "newSkill2" /> <input type = "text" name = "newSkill3" id = "newSkill3" />
+						</p>
+						<p>
+							Describe this venture:<br>
+							<textarea>
+							</textarea>
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Submit Venture</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
 	<button id="openVenture" class = "btn btn-primary">Turn me into a venture!</button>
 	{% endif %}
 {% else %}
+	<div class="modal fade" id="contributeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">Contribute to {{campaign.CampaignTitle}}!</h4>
+				</div>
+				<form action="{{url_for('campaign_info', name = campaign.CampaignTitle)}}" method = "post" >
+					<div class="modal-body">
+						<p>
+							Campaign Title: <input type = "text" name = "campaignTitle" value = "{{campaign.CampaignTitle}}" readonly style="border:0; font-weight:bold;" size="70"/>
+						</p>
+						<p>
+						  <label for="amount">Contribution amount (5 point increments):</label>
+						  <input type="text" name="amount" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;" />
+						</p>
+						<p>
+							<div id="slider"></div>
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" name = "btn" value="Contribute">Contribute</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<button id="openContribute" class = "btn btn-primary">Help me become a venture!</button>
 {% endif %}
 <p>
@@ -99,41 +128,32 @@
 
 <script type = "text/javascript">
 $(document).ready (function() {
-	$( "#ventureDialog" ).dialog({
-		width: 'auto',
-		autoOpen: false,
-		modal: true
-    });
 
-    $( "#openVenture" ).button().click(function() {
-		$( "#ventureDialog" ).dialog( "open" );
-    });
 	
 	{% if g.user.is_authenticated() %}
-	
-	$( "#contributeDialog" ).dialog({
-		width: 'auto',
-		autoOpen: false,
-		modal: true
-    });
-	
-	$( "#openContribute" ).button().click(function() {
-		
-		$( "#contributeDialog" ).dialog( "open" );
-    });
-	
-	$( "#slider" ).slider({
-		value:0,
-		min: 0,
-		max: {{contribute_limit}},
-		step: 5,
-		slide: function( event, ui ) {
-        $( "#amount" ).val( ui.value );
-      }
-    });
-	
-    $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
-	
+		{% if g.user.get_id() == campaign.Person.PersonID %}
+			{% if campaign.getContributionSum() >= 250 %}
+				$( "#openVenture" ).button().click(function() {
+					$("#ventureModal").modal('show');
+				});
+			{% endif %}
+		{% else %}
+			$( "#openContribute" ).button().click(function() {
+				$( "#contributeModal" ).modal( "show" );
+			});
+			
+			$( "#slider" ).slider({
+				value:0,
+				min: 0,
+				max: {{contribute_limit}},
+				step: 5,
+				slide: function( event, ui ) {
+				$( "#amount" ).val( ui.value );
+			  }
+			});
+			
+			$( "#amount" ).val( $( "#slider" ).slider( "value" ) );
+		{% endif %}
 	{% endif %}
 });
 </script>

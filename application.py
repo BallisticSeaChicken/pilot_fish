@@ -170,6 +170,7 @@ def campaign_info(name, page = 1):
 				flash('Contributed %s points to %s!' % (request.form['amount'], name))
 			else:
 				flash('Please contribute non-zero amount')
+			return redirect(url_for('campaign_info', name = name))
 		elif request.form['btn'] == 'Comment':
 			if postForm.validate_on_submit():
 				comment = Comment(campaign.CampaignTitle, g.user.get_id(), postForm.body.data)
