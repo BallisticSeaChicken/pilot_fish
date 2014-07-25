@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="page-header"><h4>{{campaign.CampaignTitle}}</h4></div>
+<div class="page-header NormalCharacterStyle2">{{campaign.CampaignTitle}}</div>
 <div>
 	<h4>Created on:</h4> {{campaign.DatePosted}}<br>
 	<h4>By:</h4><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
