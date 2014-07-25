@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header"><h4>{{venture.Title}}</h4></div>
+
+<div>
+	<h4>Title</h4>{{venture.Title}}<br>
+	<h4>Leader:</h4><a href="/persons/{{venture.CreatorID}}">{{venture.Creator.FirstName}} {{venture.Creator.LastName}}</a><br>
+	<h4>Description:</h4> {{venture.ShortDesc}}<br>
+</div>
+<hr>
+
+
+
+</script>
+{% endblock %}
+
+<!--
+<div>
+	<h4>Date Upgraded:</h4> {{campaign.DatePosted}}<br>
+	<h4>Leader:</h4><a href="/persons/{{campaign.Person.PersonID}}">{{venture.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
+	<h4>Team member:</h4><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
+	
+	<h4>Contributions:</h4><b>{{campaign.getContributionSum()}}</b> points from <b>{{campaign.getNumBackers()}}</b> backers<br>
+	
+	<h4>Description:</h4> {{campaign.Description}}<br>
+</div> -->
