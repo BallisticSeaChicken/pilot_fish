@@ -5,7 +5,7 @@
 	{% for instance in challenges %}
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4 class="panel-title"><a data-toggle="collapse" data-target="#discussion{{challenges.index(instance)}}"><strong>Challenge: </strong>{{instance.ChallengeName}}</a><a href="#" class="spawner pull-right" value = "{{instance.ChallengeName}}">Start a Discussion!</a></h4>
+			<h4 class="panel-title"><a data-toggle="collapse" data-target="#discussion{{challenges.index(instance)}}"><strong>Challenge: </strong>{{instance.ChallengeName}}</a><a href="#" class="spawner pull-right" value = "{{instance.ChallengeName}}">Start a Discussion</a></h4>
 		</div>
 		<div id="discussion{{challenges.index(instance)}}" class="panel-collapse collapse">
 			<div class="panel-body row">

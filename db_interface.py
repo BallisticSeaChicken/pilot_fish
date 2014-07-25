@@ -65,8 +65,9 @@ def get_campaign_by_title(name):
 	session.close()
 	
 	return result
+
 	
-		#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 def get_venture_by_title(name):
 	session = Session()
 	result = session.query(Venture).options(joinedload(Venture.Creator)).first()
@@ -74,8 +75,7 @@ def get_venture_by_title(name):
 	
 	return result
 	
-	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	
 def get_comments(campaign, page):
 	session = Session()

@@ -7,7 +7,6 @@
 		<h4>Created on:</h4> {{discussion.DateCreated}}<br>
 		<h4>By:</h4><a href="{{url_for('person_info', id = discussion.Creator.PersonID)}}">{{discussion.Creator.FirstName}} {{discussion.Creator.LastName}}</a><br>
 		<strong>{% if comments is not none %}{{comments|length}}{% else %} 0 {% endif %} comments</strong>
-		<h4>Created on:</h4> {{discussion.DateCreated}}<br>
 		<h4>Description:</h4> {{discussion.Description}}<br>
 		{% if g.user.is_authenticated() %}
 		<form method="post" id = "comment_submitter">
