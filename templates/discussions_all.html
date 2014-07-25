@@ -38,7 +38,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel">Say something!</h4>
 			</div>
 			<form method = "post" >
 			{% if g.user.is_authenticated() %}
@@ -46,7 +46,7 @@
 				<div class="modal-body">
 						Start a discussion under <input type="text" name = "ChallengeName" id="ChallengeName" readonly style="border:0; color:#f6931f; font-weight:bold;" />
 						<div class="form-group">
-							<label for="topicInput">Discussion Topic</label>
+							<label for="topicInput">Discussion Topic (250 chars)</label>
 							<div id = "topicInput">{{form.Topic(size=20)}}</div>
 						</div>
 						<div class="form-group">
@@ -58,7 +58,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					{% if g.user.is_authenticated() %}
-					<button type="submit" class="btn btn-primary">Save changes</button>
+					<button type="submit" class="btn btn-primary">Discuss!</button>
 					{% endif %}
 				</div>
 			</form>
