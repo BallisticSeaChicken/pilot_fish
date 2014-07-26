@@ -20,7 +20,11 @@ def load_user(id):
 
 @application.before_request
 def before_request():
-    g.user = current_user	
+	print request.endpoint
+	g.user = current_user
+	if not g.user.is_authenticated():
+		if request.endpoint!='log_in' and request.endpoint!='static' and request.endpoint!='sign_up':
+			return redirect(url_for('log_in'))
 	
 @application.route("/")
 def redirect_home():
@@ -194,7 +198,7 @@ def person_info(id):
 	return render_template('single_person.html', person = person, contributed_to = contributed_to)
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0',debug=True)
+    application.run(host='0.0.0.0', debug=True)
 	
 #<=====================================Utilities==================================>
 

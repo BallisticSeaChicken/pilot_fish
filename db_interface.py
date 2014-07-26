@@ -81,14 +81,12 @@ def get_comments(campaign, page):
 	session = Session()
 	first_key = session.query(Comment).order_by(Comment.Key).filter(Comment.ParentPost == campaign).first()
 	
-	stmt = session.query(Comment).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).limit(5 * page).subquery()
-	comalias = aliased(Comment, stmt)
+	temp = session.query(Comment).options(joinedload(Comment.Commentator)).order_by(Comment.Key.desc()).slice((page -1) * 5, page * 5).all()
 	
-	temp = session.query(comalias).options(joinedload(comalias.Commentator)).order_by(comalias.Key).limit(5).all()
 	if temp:
-		result = list(reversed(temp))
-		print first_key.Key, result[-1].Key, "<-----------------------------"
-		previous_exist = False if first_key.Key == result[-1].Key else True
+		result = temp
+		print first_key.Key, result[0].Key, "<-----------------------------"
+		previous_exist = False if first_key.Key == result[0].Key else True
 	else:
 		result = None
 		previous_exist = False
@@ -101,14 +99,11 @@ def get_discussion_entries(topic, page):
 	session = Session()
 	first_key = session.query(DiscussionEntry).order_by(DiscussionEntry.Key).filter(DiscussionEntry.ParentPost == topic).first()
 	
-	stmt = session.query(DiscussionEntry).filter(DiscussionEntry.ParentPost == topic).order_by(DiscussionEntry.Key.desc()).limit(20 * page).subquery()
-	entalias = aliased(DiscussionEntry, stmt)
-	
-	temp = session.query(entalias).options(joinedload(entalias.Commentator)).order_by(entalias.Key).limit(20).all()
+	temp = session.query(DiscussionEntry).options(joinedload(DiscussionEntry.Commentator)).order_by(DiscussionEntry.Key.desc()).slice((page-1)*20, page*20).all()
 	if temp:
-		result = list(reversed(temp))
-		print first_key.Key, result[-1].Key, "<-----------------------------"
-		previous_exist = False if first_key.Key == result[-1].Key else True
+		result = temp
+		print first_key.Key, result[0].Key, "<-----------------------------"
+		previous_exist = False if first_key.Key == result[0].Key else True
 	else:
 		result = None
 		previous_exist = False

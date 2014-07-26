@@ -1,0 +1,631 @@
+@font-face{
+	font-family:Uni Sans Book;
+	src: url('../fonts/UniSansBook.otf');
+}
+
+@font-face{
+	font-family:Uni Sans Light;
+	src: url('../fonts/UniSansLight.otf');
+}
+
+@font-face{
+	font-family:Uni Sans Bold;
+	src: url('../fonts/UniSansBold.otf');
+}
+
+@font-face{
+	font-family:Uni Sans Heavy;
+	src: url('../fonts/UniSansHeavy.otf');
+}
+
+@font-face{
+	font-family:Uni Sans Semi Bold;
+	src: url('../fonts/UniSansSemiBold.otf');
+}
+
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
+html {
+	font-size: 1em;
+}
+
+body {
+	background: #DBDBDB; 
+	font-family: Uni Sans Book;
+	font-size: 1em;
+}
+
+div {
+	font-size: 100%;
+}
+
+.container-fluid{
+	padding: 0px;
+	margin: 0px;
+}
+
+.row {
+	padding: 0px;
+	margin: 0px;
+}
+
+.wrapper {
+	width: 100%
+}
+
+
+/******************************************/
+/*			     front page 	          */
+/******************************************/
+.nav-bar {
+	background-color: #42758F;
+	height: 50px;
+	position: fixed;
+	top: 0px;
+	margin: 0px;
+	padding: 0px;
+	border:none;
+	color: white;
+	z-index: 999;
+	float: none;
+}
+
+.navbar-form > .form-group > .form-control {
+	padding: 6px 50px;
+	font-size: 1em;
+}
+
+.nav-wrapper > .logo {
+	height: 50px;
+	width: 80px;
+	background-image: url('../etc/LogoToolbar.png');
+	background-color: white;
+	background-position: center;
+	background-repeat: no-repeat;
+	border: solid 2px white;
+	background-size:50px;
+	margin:0px;
+	padding: 0px 10px;
+	display: inline-block;
+	float: left;
+}
+
+.nav-wrapper > .menu {
+	padding: 10px;
+	height: 50px;
+	display: inline-block;
+	float: left;
+	vertical-align: top;
+}
+
+.nav-wrapper >  .menu ul {
+	list-style: none;
+	margin: 0px;
+	padding: 2px 0px;
+	font-size: 1.5em;
+	display: inline-block;
+	float: left;
+	
+}
+
+.nav-wrapper > .menu ul li {
+	display: inline-block;
+	padding: 0px 10px;
+}
+
+.nav-wrapper {
+	width: 70em;
+	border-right: solid 1px white;
+	height: 50px;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.nav-bar > .nav-wrapper > .search {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.nav-wrapper > .search .searchbtn {
+	background-color: transparent;
+	background-image: url('../etc/MagGlass.png');
+	position:relative;
+	right: 45px;
+	width: 45px;
+	height: 30px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 25px;
+	vertical-align: middle;
+	border: none;
+	z-index: 3;
+}
+
+.nav-wrapper > .search .search-filter {
+	background-color: transparent;
+	background-image: url('../etc/SearchFilter.png');
+	position:relative;
+	left: 45px;
+	margin-left: -40px;
+	width: 35px;
+	height: 34px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 35px;
+	vertical-align: middle;
+	border: none;
+}
+
+/****************** logo layer *******************/
+
+.logo-wrapper {
+	height: 100px;
+	width: 100%;
+	background-color: #DBDBDB;
+	z-index: 1;
+}
+
+.logo-wrapper::after {
+	content: " ";
+    height:55px;
+    width:110px;
+    border-radius: 0 0 112px 112px;
+    background-color: #DBDBDB;
+    position: relative;
+    display: inline-block;
+    top: -11px;
+    left: 50%;
+    margin-left: -55px;
+    z-index: 2;
+}
+
+.logo-wrapper > .logo-tab{
+	background-image: url('../etc/LightbulbIdeaButton.png');
+	background-size: 80px;
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 110px;
+	width: 110px;
+	position: relative;
+	top: 45px;
+	left: 50%;
+	margin-left: -55px;
+	z-index: 3;
+
+}
+
+/****************** end logo layer *******************/
+
+/****************** carousel layer *******************/
+
+.carousel-wrapper {
+	height: 300px;
+	background-color: #F78F28;
+	z-index:-2;
+}
+
+.carousel {
+	height: 280px;
+	width: auto;
+	background-color: #666666;
+}
+
+.logo-wrapper, .carousel-wrapper{
+	min-width: 94em;
+}
+
+/****************** end carousel layer *******************/
+
+/****************** new and popular for each category *******************/
+
+
+.new-popular.wrapper {
+	height: 33em;
+	width: 100%;
+	padding: 0px;
+	margin-right: auto;
+	margin-left: auto; 
+	margin-top:2em;
+}
+
+.new-popular > .sub-wrapper {
+	height: 100%;
+	background-color: transparent;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.new-popular > .sub-wrapper {
+	width: 94em;
+	min-width: 94em;
+}
+
+.new-popular > .sub-wrapper >  div {
+	margin-left: 2em;
+	margin-right: 2em;
+	width: 30em;
+}
+
+.new-popular > .sub-wrapper >  div {
+	height: 100%;
+	background-color: #FFF;
+	border: solid 1px #666666;
+}
+
+.new-popular > .sub-wrapper > div:first-child {
+	margin-right: 0px;
+	margin-left: 0px!important;
+}
+
+.new-popular > .sub-wrapper > div:last-child {
+	margin-left: 0px;
+	margin-right: 0px!important;
+}
+
+.category-banner {
+	width: 9em;
+	height: 1.5em;
+	font-size: 2em;
+	line-height: 1.7em;
+	color: white;
+	padding: 0px 0.45em;
+	vertical-align: middle;
+}
+
+.sub-wrapper > div > .category-banner::after {
+	content: " ";
+	width: 3.0em;
+	height:3.0em;
+	background-color: transparent;
+	display: inline-block;
+	position: absolute;
+	right:1.15em;
+	top: 0.65em;
+	background-size: 3.0em;
+
+}
+
+.np-discussions {
+	background-color: #A8A8A8;
+}
+
+.np-campaigns {
+	background-color: #42758F;
+}
+
+.np-ventures {
+	background-color: #F78F28;
+}
+
+.np-discussions::after {
+	background-image: url(../etc/Discussions.png);
+	background-position: center;
+	background-repeat: no-repeat;
+
+}
+
+.np-campaigns::after {
+	background-image: url(../etc/Campaigns.png);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.np-ventures::after {
+	background-image: url(../etc/Ventures.png);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.col-sm-3 {
+
+	padding:2em;
+	display: inline-block;
+}
+/****************** end new and popular for each category *******************/
+
+/****************** leaderboard *******************/
+
+
+div.top, div.content {
+	padding: 2em;
+}
+
+.ld-top {
+	background-color: #F78F28;
+}
+
+
+
+.leaderboard-content {
+	width: 100%;
+	height: 35em;
+	background-color: transparent;
+	
+}
+.leaderboard-content > .sub-wrapper {
+	height: 35em;
+	margin: 2em auto;
+	clear: both;
+
+}
+
+.leaderboard-content > .sub-wrapper > .content {
+	height: 100%;
+	background-color: #FFF;
+	border: solid 1px #666666;
+	margin-right: 2em;
+}
+
+.leaderboard-content > .sub-wrapper > .top {
+	background-color: #FFF;
+	border: solid 1px #666666;
+	height: 33em;
+}
+
+
+.leaderboard-content > .sub-wrapper {
+	width: 94em;
+	min-width: 94em;
+}
+
+
+.leaderboard-content > .sub-wrapper > .content {
+	width: 62em; 
+	float:left;
+	display: inline-block;
+	position: relative;
+
+}
+
+.leaderboard-content > .sub-wrapper > .top {
+	width: 30em; 
+	float:left;
+	display: inline-block;
+	position: relative;
+
+}
+/****************** end leaderboard *******************/
+
+/******************************************************/
+/*			           idea page   	                  */
+/******************************************************/
+
+/******************************************************/
+/*			           venture page   	              */
+/******************************************************/
+
+/******************************************************/
+/*			           campaign page   	              */
+/******************************************************/
+
+/******************************************************/
+/*			           login page   	              */
+/******************************************************/
+
+
+html, body {
+height: 100%;
+}
+
+body.login {
+	background-image: url(../etc/signin-wallpaper.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+	z-index: -10;
+	min-height: 100%;
+}
+
+html .overlay {
+	min-height: 100%;
+	z-index: -9;
+	background-color: rgba(137,187,206,0.3);
+}
+
+div.page-wrapper {
+	padding: 0px;
+	margin: 0px;
+}
+
+div.login-outer-wrapper {
+	width: 30em;
+	height: 37em;
+	background-color: rgba(225, 225, 225, 0.9);
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	top: 4em;
+	margin-bottom: 3em;
+}
+
+div.login-outer-wrapper img {
+	max-width: 15em;
+	margin-right: auto;
+	margin-left: auto;
+	display: block;
+	padding: 2em 0em;
+} 
+div.login-outer-wrapper form {
+	width: 100%;
+	padding: 0em 6em;
+}
+
+div.login-outer-wrapper form > input[type='text'], div.login-outer-wrapper form > input[type='password'] {
+	width: 100%;
+	padding: 0.5em 0em 0em 0em;
+	font-size: 1.8em;
+	border-color: transparent;
+	border-bottom: solid 1px #42758F;
+	background-color: transparent;
+}
+
+div.login-outer-wrapper form > label > input[type='checkbox'] {
+	display: inline-block;
+	width: 1.5em;
+
+	  /* Double-sized Checkboxes */
+	  -ms-transform: scale(1.8); /* IE */
+	  -moz-transform: scale(1.8); /* FF */
+	  -webkit-transform: scale(1.8); /* Safari and Chrome */
+	  -o-transform: scale(1.8); /* Opera */
+
+	line-height: 1.5em;
+	vertical-align: middle;
+	margin-top: -0.2em!important;
+}
+
+div.login-outer-wrapper form > label {
+	font-weight: normal;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	color: #42758F;
+	font-size: 120%;
+	line-height: 1em;
+	vertical-align: middle;
+
+}
+
+div.login-outer-wrapper form > label > span {
+	margin-left: 5px;
+}
+
+div.login-outer-wrapper form > div > button {
+	font-size: 1.5em;
+	line-height: normal;
+	height: 1.9em;
+	vertical-align: middle;
+	margin: auto;
+	border: solid 1px #FFF;
+	background-color: #F78F28;
+	color: #FFF;
+	padding: 0.1em 0.3em;
+	border-radius: 5px;
+	float: left;
+
+}
+
+div.login-outer-wrapper form > div > button:hover {
+	border: solid 1px #F78F28;
+	background-color: #FFF;
+	color: #F78F28;
+}
+
+div.login-outer-wrapper form > div > input[type='submit'] {
+	font-size: 1.5em;
+	line-height: normal;
+	height: 1.9em;
+	vertical-align: middle;
+	margin: auto;
+	border: solid 1px #FFF;
+	background-color: #42758F;
+	color: #FFF;
+	padding: 0.4em;
+	border-radius: 5px;
+	float: right;
+
+}
+
+div.login-outer-wrapper form > div > input[type='submit']:hover {
+	border: solid 1px #42758F;
+	background-color: #FFF;
+	color: #42758F;
+}
+
+div.login-outer-wrapper form > .wrapper {
+	padding: 0em 2em;
+}
+
+/******************************************************/
+/*			          end login page   	              */
+/******************************************************/
+
+
+
+/*@media (min-width: 1440px) and (max-width: 1680px) {
+	.col-sm-3 {
+		width: 450px;
+		min-width: 400px!important;
+		padding:20px;
+		display: inline-block;
+	}
+
+	.main-content > .content {
+		width: 1400px;
+	}
+
+	.wrapper {
+		width: 100%;
+		min-width: 1400px;
+	}
+
+	.new-popular > .np-wrapper {
+		width: 1400px;
+	}
+
+	.new-popular > .np-wrapper >  div {
+		margin-left: 25px;
+		margin-right: 25px;
+		width: 450px!important;
+	}
+}
+
+@media (min-width: 1280px) and (max-width: 1440px) {
+	.col-sm-3 {
+		width: 410px;
+		padding:20px;
+		display: inline-block;
+	}
+
+	.main-content > .content {
+		width: 1260px;
+	}
+
+	.wrapper {
+		width: 100%;
+		min-width: 1260px;
+	}
+
+	.new-popular > .np-wrapper {
+		width: 1260px;
+	}
+
+	.new-popular > .np-wrapper >  div {
+		margin-left: 15px;
+		margin-right: 15px;
+		width: 410px!important;
+	}
+}
+
+@media (min-width: 800px) and (max-width: 1280px) {
+	.col-sm-3 {
+		width: 410px;
+		padding:20px;
+		display: inline-block;
+	}
+
+	.main-content > .content {
+		width: 1260px;
+	}
+
+	.wrapper {
+		width: 100%;
+		min-width: 1260px;
+	}
+
+	.new-popular > .np-wrapper {
+		width: 1260px;
+	}
+
+	.new-popular > .np-wrapper >  div {
+		margin-left: 15px;
+		margin-right: 15px;
+		width: 410px!important;
+	}
+}
+
+
+
+

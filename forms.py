@@ -8,7 +8,7 @@ class MultipleCheckboxField(SelectMultipleField):
 	option_widget = CheckboxInput()
 
 class SignUpForm(Form):
-	PersonID = TextField('PersonID', validators = [Required()])
+	PersonID = TextField('Username', validators = [Required()])
 	FirstName = TextField('First Name', validators = [Required()])
 	LastName = TextField('Last Name', validators = [Required()])
 	Password = PasswordField('Password', [InputRequired(), EqualTo('Confirm', message='Passwords must match')])
@@ -28,7 +28,7 @@ class SignUpForm(Form):
 	PhoneNumber = TextField('Phone Number', validators = [Required()])
 	
 class LogInForm(Form):
-	PersonID = TextField('PersonID', validators = [Required()])
+	PersonID = TextField('Username', validators = [Required()])
 	Password = PasswordField('Password', validators = [Required()])
 
 class PostForm(Form):

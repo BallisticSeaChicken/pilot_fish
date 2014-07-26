@@ -1,19 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3>Log In</h3>
-<form action="" method="post" name="login" class = "form">
-	{{form.hidden_tag()}}
-    <div class="form-group">
-		<label for="personIdInput">Person ID</label>
-		<div id = "personIdInput">{{form.PersonID(size=20)}}</div>
+<div class="overlay">
+	<div class="login-outer-wrapper">
+		<img src="{{url_for('static', filename = 'style/etc/LoginLogo.png')}}">
+		<form method="post">
+			{{form.hidden_tag()}}
+			{{form.PersonID(placeholder="Username")}}
+			{{form.Password(placeholder="Password")}}
+			<label>
+				<input type="checkbox" value="remember-pw" name="remember-pw"><span>remember me on this computer</span>
+			</label>
+			<div class="wrapper">
+				<Input type="submit" value = "Log In">
+			</div>
+		</form>
+		<form action="{{url_for('sign_up')}}"><div class="wrapper"><button type="submit" id="signup">Sign Up</button></div></form>
 	</div>
-	<div class="form-group">
-		<label for="passwordInput">Password
-		<div id = "passwordInput">{{form.Password(size=20)}}</div>
-	</div>
-	<p>
-		<button type="submit" class = "btn btn-warning">Log In</button>
-	</p>
-</form>
+</div>
+<script type="text/javascript">
+	document.getElementsByTagName('body')[0].className+=' login'
+</script>
 {% endblock %}
