@@ -57,10 +57,10 @@ def discussions_all():
 			Topic = form.Topic.data
 			Description = form.Description.data
 			
-			Creator = g.user.get_id()
+			CreatorID = g.user.get_id()
 			DateCreated = datetime.datetime.now()
 			
-			discussion = Discussion(ChallengeName, Topic, Creator, DateCreated, Description)
+			discussion = Discussion(ChallengeName, Topic, CreatorID, DateCreated, Description)
 			
 			commit_to_db(discussion)
 			

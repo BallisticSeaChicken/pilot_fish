@@ -105,10 +105,10 @@ class Discussion(Base):
 	
 	Entries = relationship('DiscussionEntry', primaryjoin = 'DiscussionEntry.ParentPost == Discussion.Topic', backref='Discussion')
 	
-	def __init__(self, ChallengeName, Topic, Creator, DateCreated, Description):
+	def __init__(self, ChallengeName, Topic, CreatorID, DateCreated, Description):
 		self.ChallengeName = ChallengeName
 		self.Topic = Topic
-		self.Creator = Creator
+		self.CreatorID = CreatorID
 		self.DateCreated = DateCreated
 		self.Description = Description
 		
