@@ -16,7 +16,7 @@
 	{% for instance in ventures %}
 	<tr>
 		<td><a href="/ventures/{{instance.Title|urlencode()}}">{{instance.Title}}</a></td>
-		<td>{{instance.DatePosted.strftime("%A, %d. %B %Y %I:%M%p")}}</td>
+		<td></td>
 		<td>{{instance.Backers}}</td>
 		<td><a href="/persons/{{instance.Creator.PersonID|urlencode()}}">{{instance.Creator.FirstName}} {{instance.Creator.LastName}}</d></td>
 	</tr>
