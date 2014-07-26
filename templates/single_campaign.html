@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header NormalCharacterStyle2">{{campaign.CampaignTitle}}</div>
 <div>
-	<p>Created on:</p> {{campaign.DatePosted}}<br>
+	<p>Created on:</p> {{campaign.DatePosted.strftime("%A, %d. %B %Y %I:%M%p")}}<br>
 	<p>By:</p><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
 	<p>Contributions:</p><b>{{campaign.getContributionSum()}}</b> points from <b>{{campaign.getNumBackers()}}</b> backers<br>
 	<p>Description:</p> {{campaign.Description}}<br>

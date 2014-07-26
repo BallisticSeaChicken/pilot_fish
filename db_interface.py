@@ -81,12 +81,11 @@ def get_comments(campaign, page):
 	session = Session()
 	first_key = session.query(Comment).order_by(Comment.Key).filter(Comment.ParentPost == campaign).first()
 	
-	temp = session.query(Comment).options(joinedload(Comment.Commentator)).order_by(Comment.Key.desc()).slice((page -1) * 5, page * 5).all()
+	temp = session.query(Comment).options(joinedload(Comment.Commentator)).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).slice((page -1) * 5, page * 5).all()
 	
-	if temp:
+	if temp is not None:
 		result = temp
-		print first_key.Key, result[0].Key, "<-----------------------------"
-		previous_exist = False if first_key.Key == result[0].Key else True
+		previous_exist = False if (first_key is None) or (first_key.Key == result[0].Key) else True
 	else:
 		result = None
 		previous_exist = False
@@ -99,11 +98,11 @@ def get_discussion_entries(topic, page):
 	session = Session()
 	first_key = session.query(DiscussionEntry).order_by(DiscussionEntry.Key).filter(DiscussionEntry.ParentPost == topic).first()
 	
-	temp = session.query(DiscussionEntry).options(joinedload(DiscussionEntry.Commentator)).order_by(DiscussionEntry.Key.desc()).slice((page-1)*20, page*20).all()
+	temp = session.query(DiscussionEntry).options(joinedload(DiscussionEntry.Commentator)).filter(DiscussionEntry.ParentPost == topic).order_by(DiscussionEntry.Key.desc()).slice((page-1)*20, page*20).all()
 	if temp:
 		result = temp
 		print first_key.Key, result[0].Key, "<-----------------------------"
-		previous_exist = False if first_key.Key == result[0].Key else True
+		previous_exist = False if (first_key is None) or (first_key.Key == result[0].Key) else True
 	else:
 		result = None
 		previous_exist = False

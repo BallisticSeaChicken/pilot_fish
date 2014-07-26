@@ -10,17 +10,17 @@
 		</div>
 		<div id="discussion{{challenges.index(instance)}}" class="panel-collapse collapse">
 			<div class="panel-body row">
-				<div class = "col-md-4">
+				<div class = "col-md-5">
 					<dl class="dl-horizontal">
 						<dt>Date Created</dt>
-						<dd>{{instance.DateMade}}</dd>
+						<dd>{{instance.DateMade.strftime("%A, %d. %B %Y %I:%M%p")}}</dd>
 						<dt>Created By</dt>
 						<dd>{{instance.Initiator.FirstName}} {{instance.Initiator.LastName}}</dd>
 						<dt>Discussion Count</dt>
 						<dd>{{instance.getNumDiscussions()}}</dd>
 					</dl>
 				</div>
-				<div class = "col-md-8">
+				<div class = "col-md-7">
 					<ul>
 					{% for discussion in instance.Discussions %}
 						<li><a href="{{url_for('discuss', topic = discussion.Topic)}}">{{discussion.Topic}}</a></li>

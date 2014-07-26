@@ -137,12 +137,18 @@ class Campaign(Base):
 	__tablename__ = 'Campaigns'
 	CampaignTitle = Column(String(50), primary_key = True)
 	Description = Column(String(300))
-	DatePosted = Column(Date)
+	DatePosted = Column(DateTime)
 	Creator = Column(String(50), ForeignKey('Persons.PersonID'))
 	
 	IndividualContributions = relationship("Contribution", primaryjoin= "Contribution.CampaignName == Campaign.CampaignTitle", backref="ContributionTarget")
 	
 	Comments = relationship('Comment', primaryjoin = 'Comment.ParentPost == Campaign.CampaignTitle', backref='TopicCampaign')
+	
+	def __init__(self, CampaignTitle, Description, DatePosted, Creator):
+		self.CampaignTitle=CampaignTitle
+		self.Description=Description
+		self.DatePosted=DatePosted
+		self.Creator=Creator
 	
 	def getContributionSum(self):
 		sum = int()

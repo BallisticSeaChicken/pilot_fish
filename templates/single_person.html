@@ -19,8 +19,8 @@
 				<tbody>
 				{% for instance in person.Campaigns %}
 				<tr>
-					<td><a href="/campaigns/{{instance.CampaignTitle|urlencode()}}">{{instance.CampaignTitle}}</a></td>
-					<td>{{instance.DatePosted}}</td>
+					<td><a href="{{url_for('campaign_info', name = instance.CampaignTitle)}}">{{instance.CampaignTitle}}</a></td>
+					<td>{{instance.DatePosted.strftime("%A, %d. %B %Y %I:%M%p")}}</td>
 					<td>{{instance.getContributionSum()}}</td>
 					<td>{{instance.getNumBackers()}}</td>
 				</tr>
@@ -80,7 +80,7 @@
 		<h4>Line of Service:</h4> {{person.Position}}<br>
 		<h4>Phone:</h4> {{person.PhoneNumber}}<br>
 		<h4>Email:</h4> {{person.Email}}<br>
-		<h4>This month's contributions:</h4> {{person.get_monthly_contribution()}} Tricolour Dollars<br>
+		<h4>This month's contributions:</h4> <strong>{{person.get_monthly_contribution()}}</strong> Tricolour Dollars out of <strong>100</strong><br>
 	</div>
 </div>
 {% endblock %}

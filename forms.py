@@ -38,3 +38,7 @@ class DiscussionForm(Form):
 	Topic = TextField('Discussion Topic', validators = [Required()])
 	Description = TextField(u'Description', widget=TextArea(), validators = [Required()])
 	
+class CampaignForm(Form):
+	CampaignTitle = TextField('Campaign Title', validators = [Required()])
+	Description = TextField(u'Description', widget=TextArea(), validators = [Required()])
+	

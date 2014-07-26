@@ -3,7 +3,7 @@ from flask import flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges, get_discussion_by_topic, get_discussion_entries, get_venture_by_title
 from db_model import Campaign, Contribution, Comment, Person, Discussion, Challenge, DiscussionEntry
-from forms import SignUpForm, LogInForm, PostForm, DiscussionForm
+from forms import SignUpForm, LogInForm, PostForm, DiscussionForm, CampaignForm
 import datetime
 
 application = flask.Flask(__name__)
@@ -139,7 +139,7 @@ def ventures_list():
 	ventures = get_ventures()
 	return render_template('all_ventures.html', ventures = ventures)
 	
-	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 @application.route("/ventures/<name>", methods=["GET", "POST"])
 def venture_info(name, page = 1):
 	venture = get_venture_by_title(name)
@@ -154,6 +154,25 @@ def venture_info(name, page = 1):
 def home():
 	return render_template('home.html')
 	
+@application.route("/campaigns/newcampaign", methods=["GET", "POST"])
+def create_campaign():
+	form = CampaignForm()
+	
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			CampaignTitle = form.CampaignTitle.data
+			Description = form.Description.data
+			DatePosted = datetime.datetime.now()
+			Creator = g.user.get_id()
+			
+			campaign = Campaign(CampaignTitle, Description, DatePosted, Creator)
+			commit_to_db(campaign)
+			
+		return redirect(url_for('campaign_info', name = CampaignTitle))
+		
+	if request.method == 'GET':
+		return render_template('create_campaign.html', form = form)
+	
 @application.route("/campaigns/")
 def campaigns_list():
 	campaigns_list = all_campaigns()
@@ -163,7 +182,6 @@ def campaigns_list():
 @application.route("/campaigns/<name>/<int:page>", methods=["GET", "POST"])
 def campaign_info(name, page = 1):
 	campaign = get_campaign_by_title(name)
-	print "<-----------------------------", campaign.CampaignTitle, name
 	comments, previous_exists = get_comments(campaign = name, page = page)
 	postForm = PostForm()
 	if request.method == 'POST':

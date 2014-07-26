@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">Create a Campaign</div>
+<form method = "POST">
+	{{form.hidden_tag()}}
+	<div class="form-group">
+		<label for="Title">Campaign Title</label>
+		<div id = "Title">{{form.CampaignTitle(size=40)}}</div>
+	</div>
+	<div class="form-group">
+		<label for="Description">Description</label>
+		<div id = "Description">{{ form.Description(cols="70", rows="20") }}</div>
+	</div>
+	
+	<button type = "submit" class = "btn btn-primary">Create Campaign</button>
+</form>
+{% endblock %}
