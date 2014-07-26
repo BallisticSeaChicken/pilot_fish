@@ -2,8 +2,12 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, joinedload, subqueryload, aliased
 from db_model import Campaign, Contribution, Comment, Person, Venture, Challenge, Discussion, DiscussionEntry
 import datetime
+import sys
 
-engine=create_engine('mssql://pilotfish:setinstone@pilotfishdb.c5zdfsvfmy5u.us-west-2.rds.amazonaws.com:1433/FishBase', echo=True)
+sys.path.insert(0, '../config')
+from config import db_connection
+
+engine=create_engine(db_connection, echo=True)
 engine.connect()
 Session = sessionmaker(bind = engine)
 
