@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">Welcome to the ADMIN page, {{g.user.FirstName}} {{g.user.LastName}}</div>
+<form method = "POST">
+	{{form.hidden_tag()}}
+	<div class="form-group">
+		<label for="Challenge">Create a Challenge</label>
+		<div id = "Challenge">{{form.ChallengeName(size=120)}}</div>
+	</div>
+	<p>i.e. "Let's create a pocket device that will link any human being to the vastness of the internet"</p>
+	<button type = "submit" class = "btn btn-primary">Create Challenge</button>
+</form>
+{% endblock %}

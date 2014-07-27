@@ -4,7 +4,7 @@ from flask import flash, url_for, render_template, redirect, request, g, session
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges, get_discussion_by_topic, get_discussion_entries, get_venture_by_title
 from db_model import Campaign, Contribution, Comment, Person, Discussion, Challenge, DiscussionEntry
-from forms import SignUpForm, LogInForm, PostForm, DiscussionForm, CampaignForm
+from forms import SignUpForm, LogInForm, PostForm, DiscussionForm, CampaignForm, ChallengeForm
 import sys
 
 sys.path.insert(0, '../config')
@@ -27,6 +27,24 @@ def before_request():
 	if not g.user.is_authenticated():
 		if request.endpoint!='log_in' and request.endpoint!='static' and request.endpoint!='sign_up':
 			return redirect(url_for('log_in'))
+	if request.endpoint=="admin" and g.user.IsAdmin == False:
+		flash("You must have administrator rights in order to access the ADMIN page")
+		return redirect(url_for('home'))
+		
+@application.route("/admin", methods=['GET', 'POST'])
+def admin():
+	form = ChallengeForm()
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			challenge = Challenge(form.ChallengeName.data, g.user.PersonID, datetime.datetime.now())
+			commit_to_db(challenge)
+			flash("Successfullly created new challenge")
+			return redirect(url_for('discussions_all'))
+		else:
+			flash("Couldn't initiate your new challenge")
+			return redirect(url_for('admin'))
+	if request.method == 'GET':
+		return render_template('admin.html', form = form)
 	
 @application.route("/")
 def redirect_home():
@@ -76,24 +94,24 @@ def discussions_all():
 def sign_up():
 	form = SignUpForm()
 	if request.method == 'POST':
-		if form.validate_on_submit() and 1 <= len(form.Skills.data) <= 3:
+		if form.validate_on_submit():
 			PersonID = form.PersonID.data
 			FirstName = form.FirstName.data
 			LastName = form.LastName.data
 			
 			Password = form.Password.data
-			Department = form.Department.data
-			Position = form.Position.data
-			Office = form.Office.data
-			PhoneNumber = form.PhoneNumber.data
+			#Department = form.Department.data
+			#Position = form.Position.data
+			#Office = form.Office.data
+			#PhoneNumber = form.PhoneNumber.data
 			Email = form.Email.data
 			
-			Skills = form.Skills.data
+			#Skills = form.Skills.data
 			
-			Interest1 = form.Interest1.data
-			Interest2 = form.Interest2.data
+			#Interest1 = form.Interest1.data
+			#Interest2 = form.Interest2.data
 			
-			user = Person(PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skills, Interest1, Interest2)
+			user = Person(PersonID, FirstName, LastName, Password, Email)
 			user = commit_to_db(user)
 			
 			registered_user = get_person_by_id(PersonID)

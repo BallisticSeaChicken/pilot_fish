@@ -2,7 +2,7 @@
 
 {% block content %}
 <h3>Sign Up</h3>
-<form action="" method="post" name="login">
+<form action="" method="post" name="signup">
 	{{form.hidden_tag()}}
 	<p>
 		Username: {{form.PersonID(size=20)}}
@@ -14,24 +14,12 @@
 		Password: {{form.Password(size=20)}}
 		Confirm Password: {{form.Confirm(size=20)}}
 	<hr>
-		Department: {{form.Department(size=20)}}
-		Position: {{form.Position(size=20)}}
-		Office: {{form.Office(size=20)}}
-	<hr>
-		Tell us about your skills <strong>(Choose 1 to 3)</strong>
-		<fieldset id = "skills">
-			{{form.Skills}}
-		</fieldset>
-	<hr>
-		Interests: {{form.Interest1(size=20)}} {{form.Interest2(size=20)}}
-	<hr>
 		Email: {{form.Email(size=20)}}
-		Phone Number: {{form.PhoneNumber(size=20)}}
 	</p>
     <p><input type="submit" value="Sign Up"></p>
 </form>
-<script type = "text/javascript">
+<!--script type = "text/javascript">
 $(document).ready(function() {
 	$( "#skill1" ).selectmenu();
-});
+}); -->
 {% endblock %}

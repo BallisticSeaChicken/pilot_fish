@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, DateTime, ForeignKey, func, Text
+from sqlalchemy import Column, Integer, String, Date, DateTime, ForeignKey, func, Text, Boolean
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
@@ -16,6 +16,8 @@ class Person(Base):
 	Office = Column(String(20))
 	PhoneNumber = Column(String(20))
 	Email = Column(String(50))
+	
+	IsAdmin = Column(Boolean)
 	
 	Skill1 = Column(String(20))
 	Skill2 = Column(String(20))
@@ -46,29 +48,14 @@ class Person(Base):
 				sum += c.Contribution
 		return sum
 	
-	def __init__(self, PersonID, FirstName, LastName, Password, Department, Position, Office, PhoneNumber, Email, Skills, Interest1, Interest2):
+	def __init__(self, PersonID, FirstName, LastName, Password, Email):
 		self.PersonID = PersonID
 		self.FirstName = FirstName
 		self.LastName = LastName
 		self.Password = Password
-		self.Department = Department
-		self.Position = Position
-		self.Office = Office
-		self.PhoneNumber = PhoneNumber
 		self.Email = Email
+		self.IsAdmin = False
 		
-		if len(Skills) == 1:
-			self.Skill1 = Skills[0]
-		
-		if len(Skills) == 2:
-			self.Skill2 = Skills[1] 
-			
-		if len(Skills) == 3:
-			self.Skill2 = Skills[2]
-		
-		self.Interest1 = Interest1
-		self.Interest2 = Interest2
-
 	def is_authenticated(self):
 		return True
 
@@ -86,11 +73,16 @@ class Person(Base):
 
 class Challenge(Base):
 	__tablename__ = "Challenges"
-	ChallengeName = Column(String(50), primary_key = True)
-	Creator = Column(String, ForeignKey('Persons.PersonID'))
-	DateMade = Column(Date)
+	Creator = Column(String(50), ForeignKey('Persons.PersonID'))
+	ChallengeName = Column(String(250), primary_key = True)
+	DateMade = Column(DateTime)
 	
 	Discussions = relationship('Discussion', primaryjoin = "Challenge.ChallengeName == Discussion.ChallengeName", backref = "RespondingTo")
+	
+	def __init__(self, ChallengeName, Creator, DateMade):
+		self.ChallengeName = ChallengeName
+		self.Creator = Creator
+		self.DateMade = DateMade
 	
 	def getNumDiscussions(self):
 		return len(self.Discussions)
