@@ -149,7 +149,8 @@ class Campaign(Base):
 		return sum
 	
 	def getNumBackers(self):
-		return len(self.IndividualContributions)
+		temp = [instance.ContributorID for instance in self.IndividualContributions]
+		return len(set(temp))
 	
 class Contribution(Base):
 	__tablename__ = 'Contributions'
