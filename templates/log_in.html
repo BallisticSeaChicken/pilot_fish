@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="overlay">
 	<div class="login-outer-wrapper">
 		<img src="{{url_for('static', filename = 'style/etc/LoginLogo.png')}}">
 		<form method="post">
@@ -17,7 +16,7 @@
 		</form>
 		<form action="{{url_for('sign_up')}}"><div class="wrapper"><button type="submit" id="signup">Sign Up</button></div></form>
 	</div>
-</div>
+
 <script type="text/javascript">
 	document.getElementsByTagName('body')[0].className+=' login'
 </script>
