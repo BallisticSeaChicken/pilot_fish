@@ -14,8 +14,6 @@ lm = LoginManager()
 lm.init_app(application)
 lm.login_view = 'login'
 
-application.secret_key = 'For mother Russia'
-
 @lm.user_loader
 def load_user(id):
     return get_person_by_id(id)
@@ -163,11 +161,9 @@ def ventures_list():
 @application.route("/ventures/<name>", methods=["GET", "POST"])
 def venture_info(name, page = 1):
 	venture = get_venture_by_title(name)
-	print "<-----------------------------", type(venture), name
 	postForm = PostForm()
 	return render_template('single_venture.html', venture=venture)
 
-	
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	
 @application.route("/home", methods=["GET", "POST"])

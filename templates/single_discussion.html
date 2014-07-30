@@ -13,7 +13,7 @@
 		   {{form.hidden_tag()}}
 		   <dl>
 			  <dt>Leave a comment:
-			  <dd>{{ form.body(cols="70", rows="5") }}
+			  <dd>{{ form.body(cols="60", rows="10") }}
 		   </dl>
 		   <p>
 			  <button type="submit" name = "btn" value = "Comment" class = "btn btn-warning">Post</button>
@@ -21,36 +21,34 @@
 		{% endif %}
 	</div>
 	
-	<div class = "col-md-6">
-		<div class = "pull-right">
-			{% if comments %}
-			<ul class="media-list">
-			{% for instance in comments %}
-				<li class = "media">
-					<a class="pull-left" href="#">
-						<img class="media-object" src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=96" alt="Generic placeholder image" height = "64" width = "64">
-					</a>
-					<div class="media-body">
-						<Strong class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</Strong> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
-						<p>{{instance.Content}}</p>
-					</div>
-				</li>
-			{% endfor %}
-			</ul>
-			{% endif %}
+	<div class = "col-md-6 pull-right">
+		{% if comments %}
+		<ul class="media-list">
+		{% for instance in comments %}
+			<li class = "media">
+				<a class="pull-left" href="#">
+					<img class="media-object" src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=96" alt="Generic placeholder image" height = "64" width = "64">
+				</a>
+				<div class="media-body">
+					<Strong class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</Strong> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
+					<p>{{instance.Content.decode('utf-8', 'ignore')}}</p>
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+		{% endif %}
 
-			<strong>{% if page > 1 %}
-				<a href="{{ url_for('campaign_info', name = discussion.Topic, page = page - 1) }}"><span class = "glyphicon glyphicon-chevron-left"></span>Newer posts</a>
-			{% else %}
-				<span class = "glyphicon glyphicon-chevron-left"></span>Newer posts
-			{% endif %}<b>|||</b>
-			{% if previous_exists %}
-				<a href="{{ url_for('campaign_info', name = discussion.Topic, page = page + 1) }}">Older posts<span class = "glyphicon glyphicon-chevron-right"></span></a>
-			{% else %}
-				Older posts<span class = "glyphicon glyphicon-chevron-right"></span>
-			{% endif %}
-			</strong>
-		</div>
+		<strong>{% if page > 1 %}
+			<a href="{{ url_for('discuss', topic = discussion.Topic, page = page - 1) }}"><span class = "glyphicon glyphicon-chevron-left"></span>Newer posts</a>
+		{% else %}
+			<span class = "glyphicon glyphicon-chevron-left"></span>Newer posts
+		{% endif %}<b>|||</b>
+		{% if previous_exists %}
+			<a href="{{ url_for('discuss', topic = discussion.Topic, page = page + 1) }}">Older posts<span class = "glyphicon glyphicon-chevron-right"></span></a>
+		{% else %}
+			Older posts<span class = "glyphicon glyphicon-chevron-right"></span>
+		{% endif %}
+		</strong>
 	</div>
 </div>
 

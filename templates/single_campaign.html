@@ -6,7 +6,7 @@
 	<p>Created on:</p> {{campaign.DatePosted.strftime("%A, %d. %B %Y %I:%M%p")}}<br>
 	<p>By:</p><a href="/persons/{{campaign.Person.PersonID}}">{{campaign.Person.FirstName}} {{campaign.Person.LastName}}</a><br>
 	<p>Contributions:</p><b>{{campaign.getContributionSum()}}</b> points from <b>{{campaign.getNumBackers()}}</b> backers<br>
-	<p>Description:</p> {{campaign.Description}}<br>
+	<p>Description:</p> {{campaign.Description.decode('utf-8', 'ignore')}}<br>
 </div>
 <hr>
 
@@ -91,7 +91,7 @@
 	   {{form.hidden_tag()}}
 	   <dl>
 		  <dt>Leave a comment:
-		  <dd>{{ form.body(cols="70", rows="5") }}
+		  <dd>{{ form.body(cols="60", rows="5") }}
 	   </dl>
 	   <p>
 		  <button type="submit" name = "btn" value = "Comment" class = "btn btn-warning">Submit Comment</button>
@@ -107,7 +107,7 @@
         </a>
 		<div class="media-body">
 			<Strong class="media-heading">{{instance.Commentator.FirstName}} {{instance.Commentator.LastName}}</Strong> on {{instance.SubTime.strftime("%A, %d. %B %Y %I:%M%p")}}:
-			<p>{{instance.Content}}</p>
+			<p>{{instance.Content.decode('utf-8', 'ignore')}}</p>
 		</div>
     </li>
 {% endfor %}
