@@ -13,8 +13,8 @@
 		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css">
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/static/style/css/style.css">
-		<link rel="stylesheet" href="/static/style/css/media.css">
+		<link rel="stylesheet" href="{{ url_for('static', filename='style/css/style.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='style/css/media.css') }}">
 		
 	</head>
 	<body>
@@ -29,7 +29,7 @@
 		{% endwith %}
 		<div class="navbar navbar-default navbar-inverse" role="navigation" id = "navBar">
 			<div class = "container">
-				<a class="navbar-brand" href="/home"><img src="/static/style/etc/LogoToolbar.png " height = "64" width = "64"></a>
+				<a class="navbar-brand" href="/home"><img src="{{ url_for('static', filename='style/etc/LogoToolbar.png') }} " height = "64" width = "64"></a>
 				<ul class="nav navbar-nav">
 					<li><a href="/discussions">Discussions</a></li>
 					<li><a href="/campaigns">Campaigns</a></li>

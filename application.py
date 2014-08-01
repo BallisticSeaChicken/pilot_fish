@@ -20,7 +20,6 @@ def load_user(id):
 
 @application.before_request
 def before_request():
-	print request.endpoint
 	g.user = current_user
 	if not g.user.is_authenticated():
 		if request.endpoint!='log_in' and request.endpoint!='static' and request.endpoint!='sign_up':
@@ -44,11 +43,7 @@ def admin():
 	if request.method == 'GET':
 		return render_template('admin.html', form = form)
 	
-@application.route("/")
-def redirect_home():
-    return redirect(url_for('home'))
-	
-@application.route("/discussions/<topic>", methods=['GET', 'POST'])
+@application.route("/discussions/<topic>/", methods=['GET', 'POST'])
 @application.route("/discussions/<topic>/<int:page>", methods=["GET", "POST"])
 def discuss(topic, page = 1):
 	discussion = get_discussion_by_topic(topic)
@@ -63,7 +58,7 @@ def discuss(topic, page = 1):
 	if request.method=='GET':
 		return render_template('single_discussion.html', discussion = discussion, comments = comments, page = page, previous_exists = previous_exists, form = postForm)
 	
-@application.route("/discussions", methods=['GET', 'POST'])
+@application.route("/discussions/", methods=['GET', 'POST'])
 def discussions_all():
 	form = DiscussionForm()
 	
@@ -116,7 +111,7 @@ def sign_up():
 			login_user(registered_user)
 			
 			flash('Signed in successfully')
-			return redirect(url_for('person_info', id = g.user.get_id()))
+			return redirect(url_for('home'))
 		else:
 			flash('Failed to sign up for Pilot Fish Innovation Platform')
 			return redirect(url_for('sign_up'))
@@ -141,7 +136,7 @@ def log_in():
 				return redirect(url_for('log_in'))
 			login_user(registered_user)
 			flash('Logged in successfully')
-			return redirect(url_for('person_info', id = registered_user.get_id()))
+			return redirect(url_for('home'))
 		
 	return render_template('log_in.html', 
 		title = 'Log In',
@@ -165,7 +160,7 @@ def venture_info(name, page = 1):
 	return render_template('single_venture.html', venture=venture)
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	
+@application.route("/")	
 @application.route("/home", methods=["GET", "POST"])
 def home():
 	return render_template('home.html')
@@ -194,7 +189,7 @@ def campaigns_list():
 	campaigns_list = all_campaigns()
 	return render_template('campaigns_all.html', campaigns = campaigns_list)
 
-@application.route("/campaigns/<name>", methods=["GET", "POST"])
+@application.route("/campaigns/<name>/", methods=["GET", "POST"])
 @application.route("/campaigns/<name>/<int:page>", methods=["GET", "POST"])
 def campaign_info(name, page = 1):
 	campaign = get_campaign_by_title(name)
