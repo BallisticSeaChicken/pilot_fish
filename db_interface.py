@@ -19,6 +19,14 @@ def commit_to_db(target):
 	
 	session.close()
 	
+def delete_from_db(target):
+	print '<-----------deleting----------------'
+	session = Session()
+	session.delete(target)
+	session.commit()
+	
+	session.close()
+	
 def get_discussion_by_topic(topic):
 	session = Session()
 	discussion = session.query(Discussion).options(joinedload(Discussion.Creator)).filter(Discussion.Topic==topic).first()
@@ -119,9 +127,14 @@ def get_discussion_entries(topic, page):
 	
 	return result, previous_exist
 	
-def get_all_persons():
+def get_all_persons(**kwargs):
 	session = Session()
-	persons = session.query(Person).all()
+	persons = session.query(Person)
+	
+	if kwargs:
+		persons = persons.filter_by(**kwargs)
+	
+	persons = persons.all()
 	session.close()
 	
 	return persons

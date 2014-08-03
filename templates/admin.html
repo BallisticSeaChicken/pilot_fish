@@ -11,4 +11,36 @@
 	<p>i.e. "Let's create a pocket device that will link any human being to the vastness of the internet"</p>
 	<button type = "submit" class = "btn btn-primary">Create Challenge</button>
 </form>
+<script type="text/javascript">
+function accept(PersonID) {
+	$.post('/accept',{
+		id: PersonID,
+	}).done(function(username) {
+		alert("Confirmed " + username.full_name + ' ' + PersonID);
+		$('tr#' + PersonID).hide();
+	});
+};
+</script>
+<script type="text/javascript">
+function del(PersonID) {
+	$.post('/delete',{
+		id: PersonID,
+	}).done(function(username) {
+		alert("Deleted " + username.full_name + ' ' + PersonID);
+		$('tr#' + PersonID).hide();
+	});
+};
+</script>
+<div class = "page-header">Newly signed-up users</div>
+<div class = "row">
+	<table class = "table-bordered col-md-4">
+		{% for instance in new_users %}
+		<tr id = "{{instance.PersonID}}">
+			<td>{{instance.FirstName}} {{instance.LastName}}</td>
+			<td><a href = "javascript:accept('{{instance.PersonID}}')">Accept</a></td>
+			<td><a href = "javascript:del('{{instance.PersonID}}')">Delete</a></td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
 {% endblock %}
