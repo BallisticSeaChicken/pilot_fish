@@ -1,8 +1,8 @@
 import flask
 import datetime
-from flask import flash, url_for, render_template, redirect, request, g, session
+from flask import flash, url_for, render_template, redirect, request, g, session, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges, get_discussion_by_topic, get_discussion_entries, get_venture_by_title
+from db_interface import  all_campaigns, get_campaign_by_title, get_all_persons, get_person_by_id, get_contribution, get_ventures, commit_to_db, get_comments, get_challenges, get_discussion_by_topic, get_discussion_entries, get_venture_by_title, delete_from_db
 from db_model import Campaign, Contribution, Comment, Person, Discussion, Challenge, DiscussionEntry
 from forms import SignUpForm, LogInForm, PostForm, DiscussionForm, CampaignForm, ChallengeForm
 import sys
@@ -14,15 +14,12 @@ lm = LoginManager()
 lm.init_app(application)
 lm.login_view = 'login'
 
-application.secret_key = 'For mother Russia'
-
 @lm.user_loader
 def load_user(id):
     return get_person_by_id(id)
 
 @application.before_request
 def before_request():
-	print request.endpoint
 	g.user = current_user
 	if not g.user.is_authenticated():
 		if request.endpoint!='log_in' and request.endpoint!='static' and request.endpoint!='sign_up':
@@ -44,13 +41,10 @@ def admin():
 			flash("Couldn't initiate your new challenge")
 			return redirect(url_for('admin'))
 	if request.method == 'GET':
-		return render_template('admin.html', form = form)
+		new_users = get_all_persons(Confirmed = False)
+		return render_template('admin.html', form = form, new_users = new_users)
 	
-@application.route("/")
-def redirect_home():
-    return redirect(url_for('home'))
-	
-@application.route("/discussions/<topic>", methods=['GET', 'POST'])
+@application.route("/discussions/<topic>/", methods=['GET', 'POST'])
 @application.route("/discussions/<topic>/<int:page>", methods=["GET", "POST"])
 def discuss(topic, page = 1):
 	discussion = get_discussion_by_topic(topic)
@@ -65,7 +59,7 @@ def discuss(topic, page = 1):
 	if request.method=='GET':
 		return render_template('single_discussion.html', discussion = discussion, comments = comments, page = page, previous_exists = previous_exists, form = postForm)
 	
-@application.route("/discussions", methods=['GET', 'POST'])
+@application.route("/discussions/", methods=['GET', 'POST'])
 def discussions_all():
 	form = DiscussionForm()
 	
@@ -112,13 +106,14 @@ def sign_up():
 			#Interest2 = form.Interest2.data
 			
 			user = Person(PersonID, FirstName, LastName, Password, Email)
-			user = commit_to_db(user)
+			try:
+				user = commit_to_db(user)
+			except Exception:
+				flash('Failed to sign up for Pilot Fish Innovation Platform, it\'s possible you have signed up already')
+				return redirect(url_for('sign_up'))
 			
-			registered_user = get_person_by_id(PersonID)
-			login_user(registered_user)
-			
-			flash('Signed in successfully')
-			return redirect(url_for('person_info', id = g.user.get_id()))
+			flash('Signed up successfully, awaiting ADMIN to accept')
+			return redirect(url_for('home'))
 		else:
 			flash('Failed to sign up for Pilot Fish Innovation Platform')
 			return redirect(url_for('sign_up'))
@@ -141,9 +136,14 @@ def log_in():
 			if registered_user is None:
 				flash('Username or Password is invalid' , 'error')
 				return redirect(url_for('log_in'))
+				
+			if not registered_user.is_authenticated:
+				flash('Please wait for an ADMIN to accept your sign up' , 'error')
+				return redirect(url_for('log_in'))
+				
 			login_user(registered_user)
 			flash('Logged in successfully')
-			return redirect(url_for('person_info', id = registered_user.get_id()))
+			return redirect(url_for('home'))
 		
 	return render_template('log_in.html', 
 		title = 'Log In',
@@ -163,13 +163,11 @@ def ventures_list():
 @application.route("/ventures/<name>", methods=["GET", "POST"])
 def venture_info(name, page = 1):
 	venture = get_venture_by_title(name)
-	print "<-----------------------------", type(venture), name
 	postForm = PostForm()
 	return render_template('single_venture.html', venture=venture)
 
-	
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	
+@application.route("/")	
 @application.route("/home", methods=["GET", "POST"])
 def home():
 	return render_template('home.html')
@@ -198,7 +196,7 @@ def campaigns_list():
 	campaigns_list = all_campaigns()
 	return render_template('campaigns_all.html', campaigns = campaigns_list)
 
-@application.route("/campaigns/<name>", methods=["GET", "POST"])
+@application.route("/campaigns/<name>/", methods=["GET", "POST"])
 @application.route("/campaigns/<name>/<int:page>", methods=["GET", "POST"])
 def campaign_info(name, page = 1):
 	campaign = get_campaign_by_title(name)
@@ -226,7 +224,7 @@ def campaign_info(name, page = 1):
 	
 @application.route("/persons/")
 def persons_list():
-	persons_list = get_all_persons()
+	persons_list = get_all_persons(Confirmed = True)
 	return render_template('persons_all.html', persons = persons_list)
 
 @application.route("/persons/<id>")	
@@ -235,10 +233,23 @@ def person_info(id):
 	contributed_to = get_contribution(contributor = id)
 	return render_template('single_person.html', person = person, contributed_to = contributed_to)
 
-if __name__ == '__main__':
-    application.run(host='0.0.0.0', debug=True)
-	
 #<=====================================Utilities==================================>
+
+@application.route("/accept", methods = ['POST'])
+def accept_user():
+	accepted_user = get_person_by_id(request.form['id'])
+	full_name = accepted_user.FirstName + ' ' + accepted_user.LastName
+	accepted_user.Confirmed = True
+	commit_to_db(accepted_user)
+	return jsonify({'full_name': full_name})
+	
+@application.route("/delete", methods = ['POST'])
+def delete_user():
+	deleted_user = get_person_by_id(request.form['id'])
+	full_name = deleted_user.FirstName + ' ' + deleted_user.LastName
+	deleted_user.Confirmed = True
+	delete_from_db(deleted_user)
+	return jsonify({'full_name': full_name})
 
 def usernameIsAvailable(username):
 	Persons = get_all_persons()
@@ -246,3 +257,6 @@ def usernameIsAvailable(username):
 	
 	return not (username in unavailableUsernames)
 		
+if __name__ == '__main__':
+    application.run(host='0.0.0.0', debug = True)
+	

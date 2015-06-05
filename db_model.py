@@ -18,6 +18,7 @@ class Person(Base):
 	Email = Column(String(50))
 	
 	IsAdmin = Column(Boolean)
+	Confirmed = Column(Boolean)
 	
 	Skill1 = Column(String(20))
 	Skill2 = Column(String(20))
@@ -55,9 +56,10 @@ class Person(Base):
 		self.Password = Password
 		self.Email = Email
 		self.IsAdmin = False
+		self.Confirmed = False
 		
 	def is_authenticated(self):
-		return True
+		return self.Confirmed
 
 	def is_active(self):
 		return True

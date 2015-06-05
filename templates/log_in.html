@@ -3,6 +3,7 @@
 {% block content %}
 	<div class="login-outer-wrapper">
 		<img src="{{url_for('static', filename = 'style/etc/LoginLogo.png')}}">
+		
 		<form method="post">
 			{{form.hidden_tag()}}
 			{{form.PersonID(placeholder="Username")}}
@@ -14,6 +15,7 @@
 				<Input type="submit" value = "Log In">
 			</div>
 		</form>
+		
 		<form action="{{url_for('sign_up')}}"><div class="wrapper"><button type="submit" id="signup">Sign Up</button></div></form>
 	</div>
 

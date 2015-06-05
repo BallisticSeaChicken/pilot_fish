@@ -19,6 +19,14 @@ def commit_to_db(target):
 	
 	session.close()
 	
+def delete_from_db(target):
+	print '<-----------deleting----------------'
+	session = Session()
+	session.delete(target)
+	session.commit()
+	
+	session.close()
+	
 def get_discussion_by_topic(topic):
 	session = Session()
 	discussion = session.query(Discussion).options(joinedload(Discussion.Creator)).filter(Discussion.Topic==topic).first()
@@ -83,13 +91,15 @@ def get_venture_by_title(name):
 	
 def get_comments(campaign, page):
 	session = Session()
+	page_length = 10
+	
 	first_key = session.query(Comment).order_by(Comment.Key).filter(Comment.ParentPost == campaign).first()
 	
-	temp = session.query(Comment).options(joinedload(Comment.Commentator)).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).slice((page -1) * 5, page * 5).all()
+	temp = session.query(Comment).options(joinedload(Comment.Commentator)).filter(Comment.ParentPost == campaign).order_by(Comment.Key.desc()).slice((page -1) * page_length, page * page_length).all()
 	
 	if temp is not None:
 		result = temp
-		previous_exist = False if (first_key is None) or (first_key.Key == result[0].Key) else True
+		previous_exist = False if (first_key is None) or (first_key.Key == result[-1].Key) else True
 	else:
 		result = None
 		previous_exist = False
@@ -100,13 +110,15 @@ def get_comments(campaign, page):
 
 def get_discussion_entries(topic, page):
 	session = Session()
+	page_length = 20
+	
 	first_key = session.query(DiscussionEntry).order_by(DiscussionEntry.Key).filter(DiscussionEntry.ParentPost == topic).first()
 	
-	temp = session.query(DiscussionEntry).options(joinedload(DiscussionEntry.Commentator)).filter(DiscussionEntry.ParentPost == topic).order_by(DiscussionEntry.Key.desc()).slice((page-1)*20, page*20).all()
+	temp = session.query(DiscussionEntry).options(joinedload(DiscussionEntry.Commentator)).filter(DiscussionEntry.ParentPost == topic).order_by(DiscussionEntry.Key.desc()).slice((page-1)*page_length, page * page_length).all()
 	if temp:
 		result = temp
-		print first_key.Key, result[0].Key, "<-----------------------------"
-		previous_exist = False if (first_key is None) or (first_key.Key == result[0].Key) else True
+		print first_key.Key, result[-1].Key, "<-----------------------------"
+		previous_exist = False if (first_key is None) or (first_key.Key == result[-1].Key) else True
 	else:
 		result = None
 		previous_exist = False
@@ -115,9 +127,14 @@ def get_discussion_entries(topic, page):
 	
 	return result, previous_exist
 	
-def get_all_persons():
+def get_all_persons(**kwargs):
 	session = Session()
-	persons = session.query(Person).all()
+	persons = session.query(Person)
+	
+	if kwargs:
+		persons = persons.filter_by(**kwargs)
+	
+	persons = persons.all()
 	session.close()
 	
 	return persons
